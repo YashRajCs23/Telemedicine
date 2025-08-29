@@ -1,39 +1,47 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// src/App.jsx
+import { Routes, Route } from "react-router-dom";
 
-import Navbar from './components/Landing/Navbar'
-import Herosection from './components/Landing/Herosection'
-import Background from './components/Landing/Background'
+// Landing Components
+import Navbar from "./components/Landing/Navbar";
+import Herosection from "./components/Landing/Herosection";
+import Background from "./components/Landing/Background";
 
+// Auth Pages
+import UserLogin from "./components/Landing/UserLogin";
+import UserSignup from "./components/Landing/UserSignup";
+import DoctorLogin from "./components/Landing/DoctorLogin";
+import DoctorSignup from "./components/Landing/DoctorSignup"; 
+import CheckUserDoctor from "./components/Landing/CheckUserDoctor";
 
-
-import './App.css'
-import UserLogin from './components/Landing/UserLogin.jsx'
-import UserSignup from './components/Landing/UserSignup.jsx'
-import DoctorLogin from './components/Landing/DoctorLogin'
-import DoctorSignup from './components/Landing/UserLogin.jsx'
 function App() {
-  const [count, setCount] = useState(0)
-
-
   return (
     <>
-     <div className=''>
-      {/* <Navbar/> */}
-      <Navbar/>
-      <Background/>
-      <Herosection/>
-     </div>
-      <h1 className=' bg-amber-300 text-blue-500 '>hii</h1>
-      <UserLogin />
-      <UserSignup />
+      <Routes>
+        {/* Home Page */}
+        <Route
+          path="/"
+          element={
+            <>
+              <Navbar />
+              <Background />
+              <Herosection />
+            </>
+          }
+        />
 
-      <DoctorLogin />
-      <DoctorSignup />
-      
+        {/* Role Selection Page */}
+        <Route path="/check" element={<CheckUserDoctor />} />
+
+        {/* User Routes */}
+        <Route path="/user/login" element={<UserLogin />} />
+        <Route path="/user/signup" element={<UserSignup />} />
+
+        {/* Doctor Routes */}
+        <Route path="/doctor/login" element={<DoctorLogin />} />
+        <Route path="/doctor/signup" element={<DoctorSignup />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

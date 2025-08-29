@@ -1,5 +1,7 @@
+// src/DoctorLogin.jsx
 import { useState } from "react";
 import { Mail, Lock, Eye, EyeOff, Stethoscope } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function DoctorLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -88,12 +90,12 @@ export default function DoctorLogin() {
 
           {/* Extra Links */}
           <div className="flex justify-between text-sm text-gray-500 mt-3">
-            <a href="#" className="hover:text-blue-600">
+            <Link to="/doctor/forgot-password" className="hover:text-blue-600">
               Forgot Password?
-            </a>
-            <a href="#" className="hover:text-blue-600">
+            </Link>
+            <Link to="/doctor/signup" className="hover:text-blue-600">
               New Doctor? Register
-            </a>
+            </Link>
           </div>
         </form>
       </div>
