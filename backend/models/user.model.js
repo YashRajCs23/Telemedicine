@@ -40,6 +40,17 @@ const userSchema = new mongoose.Schema({
         trim: true,
         required: [true, 'Locality is required']
     },
+    language: {
+        type: String,
+        required: [true, 'Language preference is required'],
+        enum: {
+            values: ['english', 'hindi'],
+            message: '{VALUE} is not supported. Only English and Hindi are available'
+        },
+        default: 'english',
+        lowercase: true,
+        trim: true
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -54,6 +65,7 @@ const userSchema = new mongoose.Schema({
 
 // Index for faster queries
 userSchema.index({ phoneNumber: 1, email: 1 });
+userSchema.index({ language: 1 }); // Add index for language queries
 
 const User = mongoose.model('User', userSchema);
 
