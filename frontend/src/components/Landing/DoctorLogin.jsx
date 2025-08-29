@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock, User, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Stethoscope } from "lucide-react";
 
 export default function DoctorLogin() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -11,18 +11,20 @@ export default function DoctorLogin() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Doctor login submitted:", form);
+    console.log("Doctor login details:", form);
+    // TODO: send form data to backend API
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-50">
       <div className="w-full max-w-md bg-white shadow-2xl rounded-2xl p-8">
         {/* Header */}
-        <h1 className="text-3xl font-bold text-center text-blue-700 mb-2">
-          Doctor Login
-        </h1>
+        <div className="flex items-center justify-center mb-6">
+          <Stethoscope className="h-10 w-10 text-blue-600 mr-2" />
+          <h1 className="text-3xl font-bold text-blue-700">Doctor Login</h1>
+        </div>
         <p className="text-gray-500 text-center mb-6">
-          Access your telemedicine dashboard
+          Access your telemedicine account
         </p>
 
         {/* Form */}
@@ -33,7 +35,7 @@ export default function DoctorLogin() {
               Email Address
             </label>
             <div className="flex items-center border rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
-              <User className="h-5 w-5 text-gray-400 mr-2" />
+              <Mail className="h-5 w-5 text-gray-400 mr-2" />
               <input
                 type="email"
                 name="email"
@@ -81,21 +83,20 @@ export default function DoctorLogin() {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg transition-all duration-300"
           >
-            Sign In
+            Login
           </button>
-        </form>
 
-        {/* Extra Links */}
-        <div className="mt-5 flex justify-between text-sm text-gray-500">
-          <a href="#" className="hover:text-blue-600">
-            Forgot Password?
-          </a>
-          <a href="#" className="hover:text-blue-600">
-            Contact Support
-          </a>
-        </div>
+          {/* Extra Links */}
+          <div className="flex justify-between text-sm text-gray-500 mt-3">
+            <a href="#" className="hover:text-blue-600">
+              Forgot Password?
+            </a>
+            <a href="#" className="hover:text-blue-600">
+              New Doctor? Register
+            </a>
+          </div>
+        </form>
       </div>
     </div>
   );
 }
-
