@@ -1,14 +1,15 @@
 import React from 'react'
 
-const BookButton = () => {
-
-    
+const BookButton = ({color,textColor}) => {
   return (
-     <div className="getstarted px-[1vw] py-[0.5vw] bg-sky-300 rounded-[0.5vw] text-white">
-            <a href="">Book a Appointment</a>
-
-     </div>
+    <a
+      href="#"
+      className={`px-6 py-2 ${color} ${textColor}  font-semibold rounded-lg hover:opacity-80 transition`}
+    >
+      Book Now
+    </a>
   )
 }
+
 
 export default BookButton
