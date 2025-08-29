@@ -13,6 +13,8 @@ import UserLogin from './components/Landing/UserLogin.jsx'
 import UserSignup from './components/Landing/UserSignup.jsx'
 import DoctorLogin from './components/Landing/DoctorLogin'
 import DoctorSignup from './components/Landing/UserLogin.jsx'
+
+import Footer from './components/Landing/footer.jsx'
 function App() {
   const [count, setCount] = useState(0)
 

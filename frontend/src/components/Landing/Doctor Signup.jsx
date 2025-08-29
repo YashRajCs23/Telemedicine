@@ -4,7 +4,7 @@ import {
   Phone,
   MapPin,
   Briefcase,
-  Mail,
+  Mail, 
   FileText,
   Eye,
   EyeOff,
