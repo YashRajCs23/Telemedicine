@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import UserLogin from './components/Landing/UserLogin.jsx'
 import UserSignup from './components/Landing/UserSignup.jsx'
+import DoctorLogin from './components/Landing/DoctorLogin'
+import DoctorSignup from './components/Landing/UserLogin.jsx'
 function App() {
   const [count, setCount] = useState(0)
 
@@ -12,6 +14,10 @@ function App() {
       <h1 className=' bg-amber-300 text-blue-500 '>hii</h1>
       <UserLogin />
       <UserSignup />
+
+      <DoctorLogin />
+      <DoctorSignup />
+      
     </>
   )
 }
