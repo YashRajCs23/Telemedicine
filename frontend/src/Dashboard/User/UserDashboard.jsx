@@ -6,13 +6,21 @@ import Doctors from "./Doctors";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
 import Settings from "./Settings";
+import Header from "./Header";
 
 const UserDashboard = () => {
   return (
     <div className="flex bg-gray-50 min-h-screen">
+      {/* Sidebar */}
       <Sidebar />
-      <main className="flex-1 lg:ml-0 overflow-y-auto">
-        <div className="min-h-screen p-4">
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col">
+        {/* Header always on top */}
+        <Header />
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-4">
           <Routes>
             <Route path="/" element={<DashboardHome />} />
             <Route path="appointments" element={<Appointments />} />
@@ -21,8 +29,8 @@ const UserDashboard = () => {
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
           </Routes>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };
