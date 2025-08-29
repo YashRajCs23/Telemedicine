@@ -17,11 +17,6 @@ import DoctorSignup from './components/Landing/UserLogin.jsx'
 
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import AboutSection from './components/Landing/About/AboutSection.jsx'
-function App() {
-  const [count, setCount] = useState(0)
- 
-  
-  
 
   
 

@@ -2,13 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-
-createRoot(document.getElementById('root')).render(
-
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
 import App from "./App.jsx"; // Home page
 import CheckUserDoctor from "./components/Landing/CheckUserDoctor.jsx";
 
