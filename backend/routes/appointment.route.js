@@ -28,6 +28,20 @@ const appointmentController = {
             });
 
             await appointment.save();
+
+            // --- Real-time Notification Logic ---
+            // Populate user's name to send a personalized notification
+            const newAppointment = await Appointment.findById(appointment._id).populate('user', 'name');
+
+            if (newAppointment) {
+              // Use req.io to emit an event to the specific doctor's room
+              req.io.to(`doctor_${doctorId}`).emit('new-appointment', {
+                message: 'You have a new appointment request.',
+                patientName: newAppointment.user.name || 'A new patient'
+              });
+            }
+            // --- End of Notification Logic ---
+
             res.status(201).json(appointment);
         } catch (error) {
             res.status(400).json({ message: error.message });
@@ -40,7 +54,7 @@ const appointmentController = {
             const { id } = req.params;
             const { status } = req.body;
 
-            if (!['accepted', 'rejected', 'completed'].includes(status)) {
+            if (!['accepted', 'rejected', 'completed', 'pending'].includes(status)) {
                 return res.status(400).json({ message: 'Invalid status' });
             }
 
@@ -103,7 +117,7 @@ const appointmentController = {
     }
 };
 
-// Routes
+// --- Routes ---
 router.post('/', appointmentController.createAppointment);
 router.put('/:id/status', appointmentController.updateAppointmentStatus);
 router.get('/user/:userId', appointmentController.getUserAppointments);

@@ -3,6 +3,7 @@ const router = express.Router();
 const Doctor = require('../models/doctor.model.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+// const localStorage = require('localStorage');
 require('dotenv').config();
 
 // Helper function to generate token
@@ -87,6 +88,8 @@ router.post('/login', async (req, res) => {
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
+
+        // localStorage.setItem('doctorId', doctor._id);
 
         // Generate JWT token
         const token = generateToken({ doctorId: doctor._id });

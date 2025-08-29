@@ -3,15 +3,22 @@ const socketIo = require('socket.io');
 const initializeSocket = (server) => {
     const io = socketIo(server, {
         cors: {
-            origin: "*",
+            origin: "*", // For development, you might want to restrict this in production
             methods: ["GET", "POST"]
         }
     });
 
-    // WebRTC signaling
     io.on('connection', (socket) => {
         console.log('New client connected:', socket.id);
 
+        // --- Listener for Doctor-specific notifications ---
+        // When the doctor's navbar connects, it joins a private room.
+        socket.on('join-doctor-room', (doctorId) => {
+            socket.join(`doctor_${doctorId}`);
+            console.log(`Socket ${socket.id} joined room for doctor ${doctorId}`);
+        });
+
+        // --- Existing WebRTC signaling ---
         socket.on('join-room', (roomId, userId) => {
             socket.join(roomId);
             socket.join(`user_${userId}`); // For user-specific notifications
