@@ -4,12 +4,12 @@ import {
   Phone,
   MapPin,
   Briefcase,
-  Mail, 
-  FileText,
+  Mail,
   Eye,
   EyeOff,
   Lock,
   Loader2,
+  Stethoscope,
 } from "lucide-react";
 
 export default function DoctorSignup() {
@@ -20,7 +20,7 @@ export default function DoctorSignup() {
     experience: "",
     email: "",
     password: "",
-    description: "",
+    specialty: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +68,7 @@ export default function DoctorSignup() {
         experience: "",
         email: "",
         password: "",
-        description: "",
+        specialty: "",
       });
     }, 1500);
   };
@@ -183,22 +183,33 @@ export default function DoctorSignup() {
             )}
           </div>
 
-          {/* Description */}
+          {/* Specialty Dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-1">
-              Description
+              Specialty
             </label>
-            <div className="flex items-start border rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
-              <FileText className="h-5 w-5 text-gray-400 mr-2 mt-1" />
-              <textarea
-                name="description"
-                placeholder="Briefly describe your specialization..."
-                value={form.description}
+            <div className="flex items-center border rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
+              <Stethoscope className="h-5 w-5 text-gray-400 mr-2" />
+              <select
+                name="specialty"
+                value={form.specialty}
                 onChange={handleChange}
                 required
-                rows="3"
-                className="w-full outline-none text-gray-700 placeholder-gray-400 resize-none"
-              />
+                className="w-full outline-none text-gray-700 placeholder-gray-400 bg-transparent"
+              >
+                <option value="">Select Specialty</option>
+                <option value="General Physician">General Physician</option>
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="Pediatrician">Pediatrician</option>
+                <option value="Orthopedic">Orthopedic</option>
+                <option value="Neurologist">Neurologist</option>
+                <option value="Psychiatrist">Psychiatrist</option>
+                <option value="Gynecologist">Gynecologist</option>
+                <option value="Dentist">Dentist</option>
+                <option value="ENT Specialist">ENT Specialist</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </div>
 
