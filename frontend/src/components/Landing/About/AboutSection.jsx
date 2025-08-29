@@ -6,7 +6,7 @@ const AboutSection = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-2 gap-6 md:gap-8">
         {/* Title Section */}
         <div className="h-auto md:h-[20vw] flex items-center justify-center md:justify-start">
-          <h1 className="text-gray-400 text-4xl md:text-5xl lg:text-6xl xl:text-[4vw] px-2 md:px-4 py-4 font-medium">
+          <h1 className="text-gray-400 text-[40vw] md:text-5xl lg:text-6xl xl:text-[4vw] px-2 md:px-4 py-4 font-medium">
             About Us
           </h1>
         </div>

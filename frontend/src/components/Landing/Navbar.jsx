@@ -10,7 +10,9 @@ const Navbar = () => {
       
       {/* Logo */}
       <div className="logo flex-[1] font-extrabold text-[2vw] text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-400">
-        <Link to="/">TeleMed</Link>
+        <Link to="/">
+        <img src={logoImage} alt="" />
+        </Link>
       </div>
 
       {/* Navigation Links */}

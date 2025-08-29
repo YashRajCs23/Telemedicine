@@ -23,11 +23,11 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-sky-900 shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="flex items-center justify-between bg-green-700 p-6 border-b border-gray-100">
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
               <span className="text-white text-sm font-bold">Dr</span>
@@ -44,7 +44,7 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
 
         <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 mx-4 mt-4 rounded-xl">
           <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
               <User className="text-blue-600" size={20} />
             </div>
             <div>
