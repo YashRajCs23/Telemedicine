@@ -38,6 +38,7 @@ router.post('/register', async (req, res) => {
             email,
             password: hashedPassword,
             locality,
+            language: req.body.language || 'english',
             isActive: true // User is active by default now
         });
 
