@@ -4,7 +4,7 @@ import BookButton from "./BookButton";
 
 const Navbar = () => {
   return (
-    <div className="w-full flex justify-between items-center px-[2vw] py-[1vw] bg-white shadow-md drop-shadow-[0_4px_3px_rgba(0,0,0,0.25)]">
+    <div className="w-full flex justify-between items-center px-[2vw] py-[1vw] bg-white shadow-md drop-shadow-[0_4px_3px_rgba(0,0,0,0.25)] fixed top-0 ">
       {/* Logo */}
       <div className="logo flex-[1] font-bold text-[2vw] text-blue-600">
         <Link to="/">TeleMed</Link>

@@ -26,6 +26,7 @@ function App() {
       <Navbar />
       <Background />
       <Herosection />
+      <AboutSection/>
       <Footer />
     </>
   );

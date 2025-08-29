@@ -4,10 +4,10 @@ import BookButton from "./BookButton";
 
 const Herosection = () => {
   return (
-    <div className="flex justify-center items-center px-[2vw] py-[2vw] w-full h-[80vh] gap-[2vw] bg-white z-10">
+    <div className="flex justify-center items-center px-[4vw] py-[1vw] w-full h-[88vh] gap-[2vw] bg-white z-10">
       
       {/* Left Section */}
-      <div className="left w-1/2 h-full flex flex-col justify-center gap-6 text-black">
+      <div className="left w-[40vw] h-full flex flex-col justify-center gap-6 text-black">
         <div>
           <h1 className="text-5xl font-bold">Enabling exceptional</h1>
           <h1 className="text-5xl font-bold">
@@ -37,11 +37,11 @@ const Herosection = () => {
       </div>
 
       {/* Right Section (Image) */}
-      <div className="image w-1/2 h-full flex justify-center items-center">
+      <div className="image w-[60vw] h-full flex justify-center items-center">
         <img
-          src="https://images.pexels.com/photos/5407252/pexels-photo-5407252.jpeg?auto=compress&cs=tinysrgb&w=600"
+          src="https://media.istockphoto.com/id/2190554545/photo/smiling-black-doctor-holding-tablet-talking-to-senior-patient-in-consultation.webp?a=1&b=1&s=612x612&w=0&k=20&c=kpZrZUYqw7qnRC-oADKju22R044DS8iaGvmEJODE06g="
           alt="Telehealth Illustration"
-          className="w-[80%] h-[80%] object-cover rounded-lg shadow-lg"
+          className="w-[80%] h-[80%] object-cover rounded-[2vw] shadow-lg"
         />
       </div>
     </div>
