@@ -4,7 +4,7 @@ import BookButton from "./BookButton";
 
 const Herosection = () => {
   return (
-    <div className="flex justify-center items-center px-[4vw] py-[1vw] w-full h-[88vh] gap-[2vw] bg-white z-10">
+    <div className="flex justify-center items-center px-[4vw] py-[1vw] w-full h-[88vh] gap-[2vw]">
       
       {/* Left Section */}
       <div className="left w-[40vw] h-full flex flex-col justify-center gap-6 text-black">

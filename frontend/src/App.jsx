@@ -17,6 +17,8 @@ import DoctorSignup from './components/Landing/UserLogin.jsx'
 
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import AboutSection from './components/Landing/About/AboutSection.jsx'
+import Services from "./components/Landing/Services.jsx";
+import Last from "./components/Landing/Last.jsx";
 
   
 
@@ -27,6 +29,8 @@ function App() {
       <Background />
       <Herosection />
       <AboutSection/>
+      <Services/>
+      <Last/>
       <Footer />
     </>
   );

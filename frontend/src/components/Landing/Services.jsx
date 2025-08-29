@@ -53,35 +53,11 @@ const Services = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      {/* Hero Section */}
-      <section className="relative py-20 px-4">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          {/* Text */}
-          <div className="space-y-8">
-            <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-gray-900">
-              Healthcare
-              <span className="block text-blue-600">At Your Fingertips</span>
-            </h1>
-            <p className="text-xl text-gray-600 max-w-lg">
-              Bringing quality medical care to rural communities through
-              innovative telemedicine solutions.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 text-white text-lg px-8 py-4 rounded-xl hover:bg-blue-700 transition">
-                Get Started Today
-              </button>
-              <button className="border border-gray-300 text-lg px-8 py-4 rounded-xl hover:bg-gray-100 transition">
-                Learn More
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
+    <div className="min-h-screen ">
       {/* Services Section */}
       <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
+          {/* Section Heading */}
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold text-gray-900">
               Our Services
@@ -93,28 +69,34 @@ const Services = () => {
             </p>
           </div>
 
+          {/* Service Cards */}
           <div className="grid md:grid-cols-2 gap-8">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="p-8 rounded-2xl bg-white shadow-md hover:shadow-lg transition cursor-pointer border"
+                className="p-8 rounded-2xl bg-pink-50 shadow-md hover:shadow-lg transition cursor-pointer border border-pink-200"
               >
+                {/* Icon + Title */}
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center">
-                    <service.icon className="w-8 h-8 text-blue-600" />
+                  <div className="w-16 h-16 rounded-2xl bg-black flex items-center justify-center">
+                    <service.icon className="w-8 h-8 text-pink-600" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900">
                     {service.title}
                   </h3>
                 </div>
-                <p className="text-gray-600 mb-4">{service.description}</p>
+
+                {/* Description */}
+                <p className="text-gray-700 mb-4">{service.description}</p>
+
+                {/* Features List */}
                 <ul className="space-y-2">
                   {service.features.map((feature, featureIndex) => (
                     <li
                       key={featureIndex}
-                      className="flex items-center gap-2 text-gray-700"
+                      className="flex items-center gap-2 text-gray-800"
                     >
-                      <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+                      <span className="w-2 h-2 rounded-full bg-pink-700"></span>
                       {feature}
                     </li>
                   ))}
