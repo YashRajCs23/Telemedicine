@@ -18,7 +18,7 @@ const Navbar = () => {
         <Link to="/AboutSection" className="hover:font-bold">
           About
         </Link>
-        <Link to="#Services" className="hover:font-bold">
+        <Link to="/Services" className="hover:font-bold">
           Services
         </Link>
         <Link to="/Last" className="hover:font-bold">
