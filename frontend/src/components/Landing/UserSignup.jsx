@@ -1,6 +1,7 @@
-// src/Signup.jsx
+// src/components/Landing/UserSignup.jsx
 import { useState } from "react";
 import { UserPlus } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function UserSignup() {
   const [form, setForm] = useState({
@@ -10,14 +11,30 @@ export default function UserSignup() {
     language: "English",
   });
 
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Only allow digits in mobile
+    if (name === "mobile" && !/^\d*$/.test(value)) return;
+
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (form.mobile.length !== 10) {
+      alert("Mobile number must be 10 digits");
+      return;
+    }
+
     console.log("Signup details:", form);
     // TODO: Send form data to backend for saving user
+
+    // Navigate to login page after signup
+    navigate("/user/login");
   };
 
   return (
@@ -113,9 +130,9 @@ export default function UserSignup() {
         {/* Footer */}
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
-          <a href="#" className="text-teal-600 font-medium hover:underline">
+          <Link to="/user/login" className="text-teal-600 font-medium hover:underline">
             Login
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react";
+import { Link } from "react-router-dom";
 
-const BookButton = ({color,textColor}) => {
+const BookButton = ({ color, textColor, to = "/check", text = "Book Now" }) => {
   return (
-    <a
-      href="#"
-      className={`px-6 py-2 ${color} ${textColor}  font-semibold rounded-lg hover:opacity-80 transition`}
+    <Link
+      to={to}
+      className={`px-6 py-2 ${color} ${textColor} font-semibold rounded-lg hover:opacity-80 transition`}
     >
-      Book Now
-    </a>
-  )
-}
+      {text}
+    </Link>
+  );
+};
 
-
-export default BookButton
+export default BookButton;

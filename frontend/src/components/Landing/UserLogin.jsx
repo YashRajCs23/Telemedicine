@@ -1,15 +1,18 @@
-// src/Login.jsx
+// src/components/Landing/UserLogin.jsx
 import { useState } from "react";
 import { Smartphone } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function UserLogin() {
   const [mobile, setMobile] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (mobile.length === 10) {
+
+    if (/^[0-9]{10}$/.test(mobile)) {
       console.log("Login with mobile:", mobile);
       // TODO: Call backend API to send OTP
+      alert(`OTP sent to ${mobile}`);
     } else {
       alert("Please enter a valid 10-digit mobile number.");
     }
@@ -60,9 +63,12 @@ export default function UserLogin() {
         {/* Footer */}
         <p className="text-center text-sm text-gray-500 mt-6">
           Don’t have an account?{" "}
-          <a href="#" className="text-teal-600 font-medium hover:underline">
-            Sign up
-          </a>
+          <Link
+            to="/user/signup"   // ✅ Fixed path
+            className="text-teal-600 font-medium hover:underline"
+          >
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>
