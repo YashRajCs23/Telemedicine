@@ -19,10 +19,12 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import AboutSection from './components/Landing/About/AboutSection.jsx'
 import Services from "./components/Landing/Services.jsx";
 import Last from "./components/Landing/Last.jsx";
+import { createBrowserRouter } from "react-router";
 
   
 
 function App() {
+
   return (
     <>
       <Navbar />
