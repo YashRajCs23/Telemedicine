@@ -37,11 +37,11 @@ const Herosection = () => {
       </div>
 
       {/* Right Section (Image) */}
-      <div className="image w-[60vw] h-full flex justify-center items-center">
+        <div className="image w-full lg:w-[55%] flex justify-center items-center">
         <img
           src="https://media.istockphoto.com/id/2190554545/photo/smiling-black-doctor-holding-tablet-talking-to-senior-patient-in-consultation.webp?a=1&b=1&s=612x612&w=0&k=20&c=kpZrZUYqw7qnRC-oADKju22R044DS8iaGvmEJODE06g="
           alt="Telehealth Illustration"
-          className="w-[80%] h-[80%] object-cover rounded-[2vw] shadow-lg"
+          className="w-[80%] h-[80%] object-cover rounded-[2vw] shadow-2xl hover:scale-105 transition duration-500"
         />
       </div>
     </div>

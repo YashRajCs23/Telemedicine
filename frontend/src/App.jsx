@@ -10,6 +10,7 @@ import Services from "./components/Landing/Services.jsx";
 import Last from "./components/Landing/Last.jsx";
 
 import "./App.css";
+import SomePoints from "./components/Landing/somepoints.jsx";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <Herosection />
       <AboutSection />
       <Services />
+      <SomePoints/>
       <Last />
       <Footer />
     </>
