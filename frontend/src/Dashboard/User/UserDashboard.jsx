@@ -1,4 +1,3 @@
-// src/User/UserDashboard.jsx
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import DashboardHome from "./DashboardHome";
@@ -29,9 +28,13 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="flex bg-gray-100 min-h-screen">
-      <Sidebar setActivePage={setActivePage} />
-      <main className="flex-1">{renderPage()}</main>
+    <div className="flex bg-gray-50 min-h-screen">
+      <Sidebar setActivePage={setActivePage} activePage={activePage} />
+      <main className="flex-1 lg:ml-0 overflow-y-auto">
+        <div className="min-h-screen">
+          {renderPage()}
+        </div>
+      </main>
     </div>
   );
 };
