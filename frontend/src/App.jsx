@@ -13,19 +13,34 @@ import UserLogin from './components/Landing/UserLogin.jsx'
 import UserSignup from './components/Landing/UserSignup.jsx'
 import DoctorLogin from './components/Landing/DoctorLogin'
 import DoctorSignup from './components/Landing/UserLogin.jsx'
+
+import { createBrowserRouter, RouterProvider } from 'react-router'
+import AboutSection from './components/Landing/About/AboutSection.jsx'
 function App() {
   const [count, setCount] = useState(0)
+ 
+  
+  
+  const routeer=createBrowserRouter([
+    {
+      path:'/BookButton',
+      element:<Background/>
+    }
+  ])
+
+  
 
 
   return (
     <>
+
      <div className=''>
-      {/* <Navbar/> */}
-      <Navbar/>
+      <Navbar/> 
       <Background/>
-      <Herosection/>
+      <Herosection/> 
+      <AboutSection/>
      </div>
-      <h1 className=' bg-amber-300 text-blue-500 '>hii</h1>
+      
       <UserLogin />
       <UserSignup />
 
