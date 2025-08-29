@@ -1,6 +1,6 @@
 // src/components/Landing/UserSignup.jsx
 import { useState } from "react";
-import { UserPlus, Mail, Lock } from "lucide-react";
+import { UserPlus, Mail, Lock, Phone } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function UserSignup() {
@@ -8,43 +8,61 @@ export default function UserSignup() {
     name: "",
     email: "",
     password: "",
-    mobile: "",
+    phoneNumber: "",
     locality: "",
     language: "English",
   });
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Only allow digits in mobile
-    if (name === "mobile" && !/^\d*$/.test(value)) return;
-
+    if (name === "phoneNumber" && !/^\d*$/.test(value)) return;
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (form.mobile.length !== 10) {
-      alert("Mobile number must be 10 digits");
-      return;
+  const validate = () => {
+    if (form.phoneNumber.length !== 10) {
+      setError("Phone number must be 10 digits");
+      return false;
     }
     if (!form.email.includes("@")) {
-      alert("Please enter a valid email address");
-      return;
+      setError("Please enter a valid email address");
+      return false;
     }
     if (form.password.length < 6) {
-      alert("Password must be at least 6 characters");
-      return;
+      setError("Password must be at least 6 characters");
+      return false;
     }
+    setError("");
+    return true;
+  };
 
-    console.log("Signup details:", form);
-    // TODO: Send form data to backend for saving user
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setLoading(true);
 
-    // Navigate to login page after signup
-    navigate("/user/login");
+    try {
+      const res = await fetch("http://localhost:3000/user/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        setError("Registration failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      setLoading(false);
+      navigate("/user/login");
+    } catch {
+      setError("Something went wrong. Try again later.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,6 +78,11 @@ export default function UserSignup() {
             Fill the details to get started
           </p>
         </div>
+
+        {/* Error */}
+        {error && (
+          <p className="text-red-600 text-center font-medium mb-4">{error}</p>
+        )}
 
         {/* Signup Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -117,21 +140,24 @@ export default function UserSignup() {
             </div>
           </div>
 
-          {/* Mobile Number */}
+          {/* Phone Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Mobile Number
+              Phone Number
             </label>
-            <input
-              type="tel"
-              name="mobile"
-              value={form.mobile}
-              onChange={handleChange}
-              required
-              maxLength={10}
-              placeholder="Enter 10-digit mobile number"
-              className="w-full rounded-xl border border-gray-300 px-4 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none"
-            />
+            <div className="flex items-center rounded-xl border border-gray-300 px-3">
+              <Phone className="w-5 h-5 text-gray-400" />
+              <input
+                type="tel"
+                name="phoneNumber"
+                value={form.phoneNumber}
+                onChange={handleChange}
+                required
+                maxLength={10}
+                placeholder="Enter 10-digit phone number"
+                className="w-full px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:outline-none rounded-xl"
+              />
+            </div>
           </div>
 
           {/* Locality */}
@@ -170,15 +196,19 @@ export default function UserSignup() {
           <button
             type="submit"
             className="w-full bg-teal-600 text-white py-2 rounded-xl hover:bg-teal-700 transition shadow-md"
+            disabled={loading}
           >
-            Sign Up
+            {loading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
-          <Link to="/user/login" className="text-teal-600 font-medium hover:underline">
+          <Link
+            to="/user/login"
+            className="text-teal-600 font-medium hover:underline"
+          >
             Login
           </Link>
         </p>

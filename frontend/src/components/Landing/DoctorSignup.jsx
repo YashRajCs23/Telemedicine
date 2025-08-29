@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // <-- Add this import
 import {
   User,
   Phone,
@@ -14,19 +15,20 @@ import {
 
 export default function DoctorSignup() {
   const [form, setForm] = useState({
-    name: "",
-    phone: "",
-    locality: "",
-    experience: "",
-    email: "",
-    password: "",
-    specialty: "",
-  });
+  name: "",
+  phoneNumber: "",
+  locality: "",
+  yearsOfExperience: "",
+  email: "",
+  password: "",
+  speciality: "", 
+});
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate(); // <-- Add this line
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -35,8 +37,8 @@ export default function DoctorSignup() {
   const validate = () => {
     let newErrors = {};
 
-    if (!/^\+?\d{10,15}$/.test(form.phone)) {
-      newErrors.phone = "Enter a valid phone number";
+    if (!/^\+?\d{10,15}$/.test(form.phoneNumber)) {
+      newErrors.phoneNumber = "Enter a valid phone number (10–15 digits)";
     }
     if (form.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters";
@@ -56,21 +58,43 @@ export default function DoctorSignup() {
     setLoading(true);
     setSuccess(false);
 
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Doctor details submitted:", form);
-      setLoading(false);
+    try {
+      const res = await fetch("http://localhost:3000/doctor/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) {
+        console.error("❌ Registration failed:", res.error);
+        setErrors({ submit: "Failed to register. Please try again." });
+        return;
+      }
+
+      const data = await res.json();
+      console.log("✅ Registration success:", data);
+
       setSuccess(true);
       setForm({
         name: "",
-        phone: "",
+        phoneNumber: "",
         locality: "",
         experience: "",
         email: "",
         password: "",
         specialty: "",
       });
-    }, 1500);
+      setErrors({});
+      // Redirect to login page after successful registration
+      setTimeout(() => {
+        navigate("/doctor/login");
+      }, 1000); // Optional: 1s delay to show success message
+    } catch (error) {
+      console.error("❌ Error:", error);
+      setErrors({ submit: "Something went wrong. Try again later." });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,6 +113,11 @@ export default function DoctorSignup() {
             ✅ Registration successful!
           </p>
         )}
+        {errors.submit && (
+          <p className="text-red-600 text-center font-medium mb-4">
+            {errors.submit}
+          </p>
+        )}
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -103,15 +132,15 @@ export default function DoctorSignup() {
             required
           />
 
-          {/* Phone */}
+          {/* Phone Number */}
           <InputField
             icon={Phone}
             label="Phone Number"
-            name="phone"
+            name="phoneNumber"
             placeholder="+91 9876543210"
-            value={form.phone}
+            value={form.phoneNumber}
             onChange={handleChange}
-            error={errors.phone}
+            error={errors.phoneNumber}
             required
           />
 
@@ -130,7 +159,7 @@ export default function DoctorSignup() {
           <InputField
             icon={Briefcase}
             label="Experience (Years)"
-            name="experience"
+            name="yearsOfExperience"
             type="number"
             placeholder="5"
             value={form.experience}
@@ -191,7 +220,7 @@ export default function DoctorSignup() {
             <div className="flex items-center border rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
               <Stethoscope className="h-5 w-5 text-gray-400 mr-2" />
               <select
-                name="specialty"
+                name="speciality"
                 value={form.specialty}
                 onChange={handleChange}
                 required
