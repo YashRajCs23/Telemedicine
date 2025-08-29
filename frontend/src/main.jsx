@@ -1,4 +1,3 @@
-// src/main.jsx
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -14,24 +13,40 @@ import UserSignup from "./components/Landing/UserSignup.jsx";
 import DoctorLogin from "./components/Landing/DoctorLogin.jsx";
 import DoctorSignup from "./components/Landing/DoctorSignup.jsx";
 
+// Services page
+import Services from "./components/Landing/Services.jsx";
+import NotFound from "./components/Landing/NotFound.jsx"; // optional 404 page
+
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
-    <Routes>
-      {/* Home */}
-      <Route path="/" element={<App />} />
+  <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        {/* Home */}
+        <Route path="/" element={<App />} />
 
-      {/* Role Selection */}
-      <Route path="/check" element={<CheckUserDoctor />} />
+        {/* Role Selection */}
+        <Route path="/check" element={<CheckUserDoctor />} />
 
-      {/* User Auth */}
-      <Route path="/user/login" element={<UserLogin />} />
-      <Route path="/user/signup" element={<UserSignup />} />
+        {/* User routes */}
+        <Route path="/user">
+          <Route path="login" element={<UserLogin />} />
+          <Route path="signup" element={<UserSignup />} />
+        </Route>
 
-      {/* Doctor Auth */}
-      <Route path="/doctor/login" element={<DoctorLogin />} />
-      <Route path="/doctor/signup" element={<DoctorSignup />} />
-    </Routes>
-  </BrowserRouter>
+        {/* Doctor routes */}
+        <Route path="/doctor">
+          <Route path="login" element={<DoctorLogin />} />
+          <Route path="signup" element={<DoctorSignup />} />
+        </Route>
+
+        {/* Services */}
+        <Route path="/services" element={<Services />} />
+
+        {/* 404 Not Found */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  </React.StrictMode>
 );
