@@ -1,11 +1,12 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+// src/App.jsx
 
-import Navbar from './components/Landing/Navbar'
-import Herosection from './components/Landing/Herosection'
-import Background from './components/Landing/Background'
+// Landing Components
+import Navbar from "./components/Landing/Navbar";
+import Herosection from "./components/Landing/Herosection";
+import Background from "./components/Landing/Background";
+import Footer from "./components/Landing/Footer";
 
+import './App.css';
 
 
 import './App.css'
@@ -21,34 +22,18 @@ function App() {
  
   
   
-  const routeer=createBrowserRouter([
-    {
-      path:'/BookButton',
-      element:<Background/>
-    }
-  ])
 
   
 
-
+function App() {
   return (
     <>
-
-     <div className=''>
-      <Navbar/> 
-      <Background/>
-      <Herosection/> 
-      <AboutSection/>
-     </div>
-      
-      <UserLogin />
-      <UserSignup />
-
-      <DoctorLogin />
-      <DoctorSignup />
-      
+      <Navbar />
+      <Background />
+      <Herosection />
+      <Footer />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -4,7 +4,7 @@ import {
   Phone,
   MapPin,
   Briefcase,
-  Mail,
+  Mail, 
   FileText,
   Eye,
   EyeOff,
@@ -12,7 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 
-export default function DoctrSignup() {
+export default function DoctorSignup() {
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -22,6 +22,7 @@ export default function DoctrSignup() {
     password: "",
     description: "",
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
