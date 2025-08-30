@@ -117,5 +117,22 @@ router.get('/profile/:id', async (req, res) => {
     }
 });
 
+// --- NEW --- GET All Doctors
+router.get('/', async (req, res) => {
+    try {
+        const doctors = await Doctor.find({}).select('-password');
+        res.status(200).json(doctors);
+    } catch (error) {
+        res.status(500).json({ message: "Server error fetching doctors list", error: error.message });
+    }
+});
+
+// --- NEW --- Logout doctor
+router.post('/logout', (req, res) => {
+    // With JWT, logout is primarily handled on the client-side.
+    // This server endpoint is here to formally acknowledge the logout action.
+    res.status(200).json({ message: 'Logout successful' });
+});
 
 module.exports = router;
+

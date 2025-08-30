@@ -1,57 +1,306 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const AboutSection = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [counters, setCounters] = useState({ patients: 0, professionals: 0, satisfaction: 0 });
+
+  
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Animate counters
+          const duration = 2000;
+          const steps = 60;
+          const increment = duration / steps;
+          
+          let currentStep = 0;
+          const timer = setInterval(() => {
+            currentStep++;
+            const progress = currentStep / steps;
+            
+            setCounters({
+              patients: Math.floor(285 * progress),
+              professionals: Math.floor(500 * progress),
+              satisfaction: Math.floor(99 * progress)
+            });
+            
+            if (currentStep >= steps) {
+              clearInterval(timer);
+              setCounters({ patients: 285, professionals: 500, satisfaction: 99 });
+            }
+          }, increment);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const element = document.getElementById('about-stats');
+    if (element) observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
+
+  const features = [
+    {
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      title: "Advanced Diagnostics",
+      description: "State-of-the-art medical equipment and cutting-edge diagnostic technologies"
+    },
+    {
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+      title: "Expert Medical Team",
+      description: "Board-certified physicians and specialists with decades of combined experience"
+    },
+    {
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+      title: "24/7 Patient Support",
+      description: "Round-the-clock medical assistance and emergency care services"
+    },
+    {
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+      title: "Comprehensive Records",
+      description: "Integrated digital health records and seamless care coordination"
+    }
+  ];
+
+  const achievements = [
+    {
+      number: counters.patients,
+      suffix: "K+",
+      title: "Patients Served",
+      description: "Successfully treated patients across our comprehensive healthcare network with exceptional outcomes and personalized care.",
+      icon: (
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+      gradient: "from-blue-600 via-blue-700 to-indigo-800"
+    },
+    {
+      number: counters.professionals,
+      suffix: "+",
+      title: "Medical Professionals",
+      description: "Highly qualified healthcare specialists, nurses, and support staff dedicated to providing world-class medical care.",
+      icon: (
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z" />
+        </svg>
+      ),
+      gradient: "from-emerald-600 via-green-700 to-teal-800"
+    },
+    {
+      number: counters.satisfaction,
+      suffix: "%",
+      title: "Patient Satisfaction",
+      description: "Exceptional patient satisfaction rate through our commitment to quality care, innovation, and patient-centered approach.",
+      icon: (
+        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+        </svg>
+      ),
+      gradient: "from-purple-600 via-violet-700 to-purple-800"
+    }
+  ];
+
   return (
-    <div className="w-full h-[45vw] bg-white px-[2vw] py-[1vw]  shadow-blue-600 ">
-      <div className="grid grid-flow-col grid-rows-2 grid-col-2 gap-4">
-        <div className="bg-white h-[20vw]">
-          <h1 className="text-gray-400 text-[4vw] px-[2vw] py-[2vw] font-medium">
-            About Us{" "}
+    <section className="relative w-full min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+      </div>
+
+      <div className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-20 lg:py-28">
+        
+        {/* Header Section */}
+        <div className="text-center mb-20 lg:mb-28">
+          <div className="inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 text-blue-700 rounded-full text-sm font-semibold mb-6 shadow-sm">
+            <div className="w-2 h-2 bg-blue-500 rounded-full mr-2 animate-pulse"></div>
+            Excellence in Healthcare
+          </div>
+          
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-gray-900 mb-6 tracking-tight">
+            About{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+              Our Mission
+            </span>
           </h1>
+          
+          <div className="w-32 h-1.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto mb-8"></div>
+          
+          <p className="text-xl lg:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed font-light">
+            Transforming healthcare through innovation, compassion, and unwavering commitment to patient excellence.
+          </p>
         </div>
-        <div className=" ">
-          <img className="w-[21vw] h-[21vw] rounded-[2vw]" src="data:image/png;base64,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" alt="" />
-        </div>
-        <div className="bg-white col-span-2 p-[2vw]">
-          <h1 className="text-[2.5vw] font-medium">
-            We provide Comphrehnsive{" "}
-            <span className="text-sky-300 font-bold">healthcare</span> problems
-            to soltions
-          </h1>
-          <h1 className="text-[2.5vw]  font-medium">
-            From expert in medical support
-          </h1>
-          <h1 className="text-gray-500 text-[2.5vw]  font-medium">
-            diaagnostics and customer care runs smoothely
-          </h1>
-          <h1 className="text-gray-500 text-[2.5vw]  font-medium">
-            Efficiently managing patient requirement and user support
-          </h1>
-        </div>
-        <div className="bg-white col-span-2 p-[2vw] items-center ">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 mt-10">
-            <div className=" bg-white border-1 border-blue-600 h-[14vw] px-[1.5vw] py-[1vw] rounded-xl hover:shadow-xl hover:transition-shadow">
-              <h2 className="text-[1.8vw] font-bold">285K+</h2>
-              <p className="text-gray-600 text-[1vw]">
-                Patients treated w/ care Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center mb-28">
+          
+          {/* Content Side */}
+          <div className="space-y-12">
+            <div className="space-y-8">
+              <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
+                Comprehensive{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+                  Healthcare
+                </span>{" "}
+                Solutions
+              </h2>
+              
+              <p className="text-xl text-gray-600 leading-relaxed">
+                We deliver exceptional medical care through cutting-edge technology, 
+                expert clinical teams, and a patient-first approach that ensures the 
+                highest standards of healthcare excellence.
               </p>
             </div>
-            <div className="bg-white border-1 border-blue-600 h-[14vw] px-[1.5vw] py-[1vw]  rounded-xl hover:shadow-xl hover:transition-shadow">
-              <h2 className="text-[1.8vw] font-bold">285K+</h2>
-              <p className="text-gray-600 text-[1vw]">
-                Patients treated w/ care
-              </p>
+
+            {/* Features Grid */}
+            <div className="grid sm:grid-cols-2 gap-6">
+              {features.map((feature, index) => (
+                <div 
+                  key={index} 
+                  className="group p-6 bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-100 transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="text-blue-600 mb-4 group-hover:text-indigo-600 transition-colors duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="font-bold text-gray-900 mb-3 text-lg">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+              ))}
             </div>
-            <div className=" bg-white border-1 border-blue-600 h-[14vw] px-[1.5vw] py-[1vw]  rounded-xl hover:shadow-xl hover:transition-shadow">
-              <h2 className="text-[1.8vw] font-bold">285K+</h2>
-              <p className="text-gray-600 text-[1vw]">
-                Patients treated w/ care
-              </p>
+          </div>
+
+          {/* Image Side */}
+          <div className="relative">
+            <div className="relative">
+              <img
+                src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D"
+                alt="Modern Healthcare Facility"
+                className="w-full h-[600px] object-cover rounded-3xl shadow-2xl"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-3xl"></div>
+            </div>
+            
+            {/* Floating Elements */}
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-blue-500/10 rounded-full backdrop-blur-sm border border-white/20"></div>
+            <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-indigo-500/10 rounded-full backdrop-blur-sm border border-white/20"></div>
+            
+            {/* Floating Card */}
+            <div className="absolute bottom-8 left-8 bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-xl border border-white/20 max-w-sm">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-bold text-gray-900">Quality Assured</p>
+                  <p className="text-gray-600 text-sm">Accredited Excellence</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Enhanced Statistics */}
+        <div id="about-stats" className="mb-20">
+          <div className="text-center mb-16">
+            <h3 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Our Track Record of Excellence
+            </h3>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Numbers that reflect our commitment to exceptional healthcare delivery and patient satisfaction.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {achievements.map((achievement, index) => (
+              <div 
+                key={index}
+                className="group relative bg-white rounded-3xl p-8 lg:p-10 shadow-lg hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-gray-200 overflow-hidden"
+              >
+                {/* Background Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${achievement.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+                
+                {/* Icon */}
+                <div className={`text-transparent bg-clip-text bg-gradient-to-r ${achievement.gradient} mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                  {achievement.icon}
+                </div>
+                
+                {/* Number */}
+                <div className="mb-4">
+                  <span className={`text-5xl lg:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${achievement.gradient}`}>
+                    {achievement.number}
+                  </span>
+                  <span className={`text-3xl lg:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r ${achievement.gradient}`}>
+                    {achievement.suffix}
+                  </span>
+                </div>
+                
+                {/* Title */}
+                <h4 className="text-xl lg:text-2xl font-bold text-gray-900 mb-4">
+                  {achievement.title}
+                </h4>
+                
+                {/* Description */}
+                <p className="text-gray-600 leading-relaxed">
+                  {achievement.description}
+                </p>
+                
+                {/* Progress Bar */}
+                <div className={`absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r ${achievement.gradient} group-hover:w-full transition-all duration-700 delay-100`}></div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Call to Action */}
+        <div className="text-center bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-12 lg:p-16 text-white">
+          <h3 className="text-3xl lg:text-4xl font-bold mb-6">
+            Ready to Experience Excellence in Healthcare?
+          </h3>
+          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+            Join thousands of satisfied patients who trust us with their healthcare needs.
+          </p>
+          <a className="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" href="#Last">
+            Schedule Your Consultation
+            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
