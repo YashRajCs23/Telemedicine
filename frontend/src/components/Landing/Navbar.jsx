@@ -1,6 +1,7 @@
 import React from "react"; 
 import BookButton from "./BookButton"; 
 // import logoimage from "./Images/o.png"; // <- corrected path 
+import logodoxy from "./Image/logo-removebg-preview.png"
 
 const Navbar = () => {
 
@@ -12,12 +13,12 @@ const Navbar = () => {
       {/* Logo - Left */} 
       <div className="logo flex-[1] font-extrabold text-[2vw] text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-400"> 
         <a href="#home"> 
-          <img src="" alt="Logo" className="h-[3vw] w-auto" /> 
+          <img src={logodoxy} alt="Logo" className=" w-auto h-[4vw]" /> 
         </a> 
       </div> 
  
       {/* Navigation Links - Center */} 
-      <div className="Links flex text-black/80 font-medium justify-center items-center flex-[2] gap-[2.5vw] text-[1.2vw]"> 
+      <div className="Links flex text-black/80 font-bold justify-center items-center flex-[2] gap-[2.5vw] text-[1.2vw]"> 
         <a href="#home" className="relative group"> 
           <span>Home</span> 
           <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gradient-to-r from-blue-600 to-sky-400 transition-all duration-300 group-hover:w-full"></span> 

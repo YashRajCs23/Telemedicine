@@ -4,6 +4,8 @@ const AboutSection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [counters, setCounters] = useState({ patients: 0, professionals: 0, satisfaction: 0 });
 
+  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -202,7 +204,7 @@ const AboutSection = () => {
           <div className="relative">
             <div className="relative">
               <img
-                src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+                src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGRvY3RvcnxlbnwwfHwwfHx8MA%3D%3D"
                 alt="Modern Healthcare Facility"
                 className="w-full h-[600px] object-cover rounded-3xl shadow-2xl"
               />
@@ -290,12 +292,12 @@ const AboutSection = () => {
           <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
             Join thousands of satisfied patients who trust us with their healthcare needs.
           </p>
-          <button className="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+          <a className="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105" href="#Last">
             Schedule Your Consultation
             <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </button>
+          </a>
         </div>
       </div>
     </section>
