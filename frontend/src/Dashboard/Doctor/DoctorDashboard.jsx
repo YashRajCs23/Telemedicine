@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { 
     Calendar, Users, Clock, Bell, LayoutDashboard, Settings, LogOut, 
     HeartPulse, Stethoscope, BriefcaseMedical, Menu, X, Plus, Edit2, 
-    Trash2, User, Video, UserX, AlertCircle, CheckCircle, Save, Phone, 
+    Trash2, User, Video, Search, AlertCircle, CheckCircle, Save, Phone, 
     Mail, MapPin
 } from 'lucide-react';
 

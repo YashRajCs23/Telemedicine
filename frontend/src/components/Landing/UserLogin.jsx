@@ -53,11 +53,11 @@ export default function UserLogin() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-teal-50">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl p-8">
+      <div className="w-full max-w-md rounded-2xl bg-white shadow-2xs p-8">
         {/* Header */}
         <div className="flex flex-col items-center mb-6">
           <h1 className="text-2xl font-bold text-teal-700">Patient Login</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-gray-500 text-sm mt-">
             Enter your credentials to continue
           </p>
         </div>

@@ -84,4 +84,3 @@ const Sidebar = ({ setActivePage, activePage }) => {
 };
 
 export default Sidebar;
-

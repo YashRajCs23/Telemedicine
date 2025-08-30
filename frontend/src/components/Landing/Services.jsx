@@ -74,7 +74,7 @@ const Services = () => {
             {services.map((service, index) => (
               <div
                 key={index}
-                className="p-8 rounded-2xl bg-pink-50 shadow-md hover:shadow-lg transition cursor-pointer border border-pink-200"
+                className="p-8 rounded-2xl bg- shadow-md hover:shadow-lg transition cursor-pointer border border-pink-200"
               >
                 {/* Icon + Title */}
                 <div className="flex items-center gap-4 mb-6">

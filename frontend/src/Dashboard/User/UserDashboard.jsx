@@ -1,40 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import { io } from "socket.io-client";
+import { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import Appointments from "./Appointments";
 import Doctors from "./Doctors";
 import Profile from "./Profile";
+import ChatBot from "./ChatBot";
 import DashboardHome from "./DashboardHome";
-import ChatBot from "./ChatBot"; // Import the ChatBot component
-// import { Home, Calendar, Stethoscope, User, Menu, X, LogOut, Plus, Clock, CheckCircle2, AlertCircle, Search, ChevronLeft, Video, XCircle, MapPin, RefreshCw, Edit3, Phone, Mail, Camera, Heart, Upload, Save, Star } from "lucide-react";
+import { io } from "socket.io-client";
+import { useNavigate } from "react-router";
 
-// Initialize socket connection once outside the component
-const socket = io("http://localhost:3000"); // Ensure this URL is correct for your server
+// Initialize socket connection
+const socket = io("http://localhost:3000");
 
-
-// --- Reusable Component: Booking Modal ---
-
-
-// --- Reusable Component: Appointment Form ---
-
-
-// --- Page Component: DashboardHome ---
-
-
-// --- Page Component: Appointments ---
-
-
-// --- Page Component: Doctors ---
-
-
-// --- Page Component: Profile ---
-
-
-// --- Page Component: ChatBot (Placeholder) ---
-
-
-// --- Main Dashboard Component ---
 const UserDashboard = () => {
     const [activePage, setActivePage] = useState("home");
     const navigate = useNavigate();
@@ -62,16 +38,16 @@ const UserDashboard = () => {
         }
     };
 
-    return (
-        <div className="flex bg-gray-50 min-h-screen">
-            <Sidebar setActivePage={setActivePage} activePage={activePage} />
-            <main className="flex-1 lg:ml-0 overflow-y-auto">
-                <div className="min-h-screen">
-                    {renderPage()}
-                </div>
-            </main>
+  return (
+    <div className="flex bg-gray-50 min-h-screen">
+      <Sidebar setActivePage={setActivePage} activePage={activePage} />
+      <main className="flex-1 lg:ml-0 overflow-y-auto">
+        <div className="min-h-screen">
+          {renderPage()}
         </div>
-    );
+      </main>
+    </div>
+  );
 };
 
 export default UserDashboard;

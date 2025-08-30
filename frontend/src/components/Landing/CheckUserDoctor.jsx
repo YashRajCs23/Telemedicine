@@ -6,8 +6,9 @@ export default function CheckUserDoctor() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-teal-50">
-      <div className="w-full max-w-md rounded-2xl bg-white shadow-xl p-8 text-center">
+    <div className="flex min-h-screen items-center justify-center px-[4vw] bg-slate-900 ">
+      
+      <div className="w-1/2 max-w-md rounded-2xl bg-white shadow-xl p-8 text-center h-[20vw]">
         <h1 className="text-2xl font-semibold text-gray-800 mb-6">
           Choose Your Role
         </h1>
