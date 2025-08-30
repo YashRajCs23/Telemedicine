@@ -8,7 +8,7 @@ const Herosection = () => {
     <div className="flex flex-col lg:flex-row justify-center items-center px-6 md:px-12 pt-16 pb-8 w-full min-h-[88vh] gap-8 lg:gap-16">
 
       {/* Left Section */}
-      <div className="left w-full lg:w-[40%] flex flex-col justify-center gap-4 md:gap-6 text-black">
+      <div className="left w-[40vw] lg:w-[40%] flex flex-col justify-center gap-4 md:gap-6 text-black">
         <div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">Enabling exceptional</h1>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
@@ -18,9 +18,7 @@ const Herosection = () => {
         </div>
 
         <p className="text-base md:text-lg text-gray-500 max-w-lg">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          fugit! Empowering patients and doctors through seamless telehealth
-          solutions.
+          Empowering patients and doctors through seamless, unbiased telehealth solutions. No one is left behind—your health matters, your data stays secure, and every consultation is treated equally.
         </p>
 
         {/* Buttons */}
@@ -38,6 +36,7 @@ const Herosection = () => {
       </div>
 
       {/* Right Section (Image) */}
+<<<<<<< HEAD
       <div className="image w-full lg:w-[55%] flex justify-center overflow-hidden z--1 items-center mt-8 lg:mt-0">
         <img
           src={imagehome}
@@ -45,6 +44,16 @@ const Herosection = () => {
           className="w-full h-auto max-w-md lg:max-w-lg rounded-2xl shadow-2xl hover:scale-105 transition duration-500"
         />
       </div>
+=======
+       
+<div className="image w-[60vw] lg:w-[55%] flex justify-center items-center mt-8 lg:mt-0">
+        <img
+          src={imagehome}
+          alt="Telehealth Illustration"
+          className="w-full h-auto max-w-xs lg:max-w-sm rounded-2xl shadow-2xl hover:scale-105 transition duration-500"
+        />
+      </div>
+>>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
     </div>
   );
 };

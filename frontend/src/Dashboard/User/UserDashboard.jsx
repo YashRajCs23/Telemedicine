@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
@@ -41,9 +42,28 @@ const Sidebar = ({ setActivePage, activePage }) => {
         { name: "Doctors", icon: <Stethoscope />, page: "doctors" },
         { name: "Profile", icon: <User />, page: "profile" }
     ];
+=======
+import { Routes, Route } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import DashboardHome from "./DashboardHome";
+import Appointments from "./Appointments";
+import Doctors from "./Doctors";
+import Profile from "./Profile";
+import Settings from "./Settings";
+import Header from "./Header";
+import ChatBot from "./ChatBot";
+import Notifications from "./Notifications"; // ✅ You forgot this import
+
+const UserDashboard = () => {
+  return (
+    <div className="flex bg-gray-50 min-h-screen">
+      {/* Sidebar */}
+      <Sidebar />
+>>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
 
     const toggleSidebar = () => setIsOpen(!isOpen);
 
+<<<<<<< HEAD
     const handleLogout = async () => {
         try {
             await fetch('http://localhost:3000/user/logout', { method: 'POST' });
@@ -856,3 +876,23 @@ const UserDashboard = () => {
 
 export default UserDashboard;
 
+=======
+        {/* Page Content */}
+        <main className="flex-1 overflow-y-auto p-4">
+          <Routes>
+            <Route path="/" element={<DashboardHome />} />
+            <Route path="appointments" element={<Appointments />} />
+            <Route path="doctors" element={<Doctors />} />
+            <Route path="notifications" element={<Notifications />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="chatbot" element={<ChatBot />} />
+          </Routes>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UserDashboard;
+>>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
