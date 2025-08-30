@@ -16,7 +16,10 @@ const appointmentController = {
             );
 
             if (!isAvailable) {
-                return res.status(400).json({ message: 'Time slot is not available' });
+                return res.status(400).json({ 
+                    success: false, // ADDED
+                    message: 'Time slot is not available' 
+                });
             }
 
             const appointment = new Appointment({
@@ -42,9 +45,16 @@ const appointmentController = {
             }
             // --- End of Notification Logic ---
 
-            res.status(201).json(appointment);
+            res.status(201).json({ 
+                success: true, // ADDED
+                message: 'Appointment booked successfully', // ADDED
+                appointment // WRAPPED IN OBJECT
+            });
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            res.status(400).json({ 
+                success: false, // ADDED
+                message: error.message 
+            });
         }
     },
 
@@ -55,7 +65,10 @@ const appointmentController = {
             const { status } = req.body;
 
             if (!['accepted', 'rejected', 'completed', 'pending'].includes(status)) {
-                return res.status(400).json({ message: 'Invalid status' });
+                return res.status(400).json({ 
+                    success: false, // ADDED
+                    message: 'Invalid status' 
+                });
             }
 
             const appointment = await Appointment.findByIdAndUpdate(
@@ -66,12 +79,22 @@ const appointmentController = {
              .populate('doctor', 'name speciality');
 
             if (!appointment) {
-                return res.status(404).json({ message: 'Appointment not found' });
+                return res.status(404).json({ 
+                    success: false, // ADDED
+                    message: 'Appointment not found' 
+                });
             }
 
-            res.json(appointment);
+            res.json({ 
+                success: true, // ADDED
+                message: 'Appointment status updated successfully', // ADDED
+                appointment // WRAPPED IN OBJECT
+            });
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            res.status(400).json({ 
+                success: false, // ADDED
+                message: error.message 
+            });
         }
     },
 

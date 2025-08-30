@@ -3,15 +3,16 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db.js'); // Assuming you have this file
-const initializeSocket = require('./config/socket.js'); // Assuming you have this file
+const connectDB = require('./config/db.js');
+const initializeSocket = require('./config/socket.js');
 
 // Route imports
 const userRoutes = require('./routes/user.route.js');
 const doctorRoutes = require('./routes/doctor.route.js');
 const appointmentRoutes = require('./routes/appointment.route.js');
 const sessionRoutes = require('./routes/session.route.js');
-const chatbotRoutes = require('./routes/chatbot.route.js'); // Assuming you have this file
+const chatbotRoutes = require('./routes/chatbot.route.js');
+const agoraRoutes = require('./routes/agora.route.js'); // AGORA ROUTE IMPORTED
 
 // Initialize app and server
 dotenv.config();
@@ -41,6 +42,7 @@ app.use('/doctor', doctorRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/sessions', sessionRoutes);
 app.use('/chatbot', chatbotRoutes);
+app.use('/agora', agoraRoutes); // AGORA ROUTE ADDED
 
 // Health check route
 app.get('/', (req, res) => {

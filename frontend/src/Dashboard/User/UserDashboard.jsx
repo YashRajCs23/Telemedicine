@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChatBot from './ChatBot';
+import ChatBot from './ChatBot'; // Assuming ChatBot is a separate component
 import { io } from "socket.io-client";
 import { 
     Home, Calendar, Stethoscope, User, Menu, X, LogOut, Plus, 
     Clock, CheckCircle2, AlertCircle, Search, ChevronLeft, Video, 
-    XCircle, MapPin, RefreshCw,Bot, Edit3, Phone, Mail, Camera, Heart, 
+    XCircle, MapPin, RefreshCw, Bot, Edit3, Phone, Mail, Camera, Heart, 
     Upload, Save, Star
 } from "lucide-react";
 
@@ -40,7 +40,7 @@ const Sidebar = ({ setActivePage, activePage }) => {
         { name: "Dashboard", icon: <Home />, page: "home" },
         { name: "Appointments", icon: <Calendar />, page: "appointments" },
         { name: "Doctors", icon: <Stethoscope />, page: "doctors" },
-        {name: "ChatBot", icon: <Bot />, page: "chatbot" },
+        { name: "ChatBot", icon: <Bot />, page: "chatbot" },
         { name: "Profile", icon: <User />, page: "profile" }
     ];
 
@@ -82,7 +82,7 @@ const Sidebar = ({ setActivePage, activePage }) => {
                         <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center"><User size={16} className="text-blue-600" /></div>
                         <div className="flex-1 min-w-0"><p className="text-sm font-medium text-gray-900 truncate">{userName}</p><p className="text-xs text-gray-500 truncate">Patient</p></div>
                     </div>
-                     <button onClick={handleLogout} className="flex items-center w-full space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-red-600 hover:bg-red-50">
+                    <button onClick={handleLogout} className="flex items-center w-full space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-red-600 hover:bg-red-50">
                         <span className="text-red-500"><LogOut /></span>
                         <span className="font-medium">Logout</span>
                     </button>
@@ -144,10 +144,10 @@ const BookingModal = ({ onClose, onAppointmentBooked }) => {
                 <div className="flex justify-between items-center mb-4 pb-4 border-b">
                     <div className="flex items-center gap-2">
                         {view === 'form' && (
-                             <button onClick={() => setView('list')} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><ChevronLeft size={22} /></button>
+                            <button onClick={() => setView('list')} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><ChevronLeft size={22} /></button>
                         )}
                         <div>
-                             <h3 className="text-xl font-bold text-gray-800">{view === 'list' ? 'Select a Doctor' : 'Book Appointment'}</h3>
+                            <h3 className="text-xl font-bold text-gray-800">{view === 'list' ? 'Select a Doctor' : 'Book Appointment'}</h3>
                             <p className="text-gray-600 text-sm">{view === 'form' && `with ${selectedDoctor.name}`}</p>
                         </div>
                     </div>
@@ -160,14 +160,14 @@ const BookingModal = ({ onClose, onAppointmentBooked }) => {
                             <input type="text" placeholder="Search by name or specialty..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border rounded-lg" />
                         </div>
                         <div className="overflow-y-auto space-y-2">
-                             {loading ? <p>Loading doctors...</p> : error ? <p className="text-red-500">{error}</p> : 
+                            {loading ? <p>Loading doctors...</p> : error ? <p className="text-red-500">{error}</p> : 
                                 filteredDoctors.map(doc => (
                                     <div key={doc._id} onClick={() => handleSelectDoctor(doc)} className="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
                                         <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3"><span className="text-blue-600 font-semibold">{getInitials(doc.name)}</span></div>
                                         <div><p className="font-semibold text-gray-800">{doc.name}</p><p className="text-sm text-gray-500">{doc.speciality}</p></div>
                                     </div>
                                 ))
-                             }
+                            }
                         </div>
                     </div>
                 ) : (
@@ -241,9 +241,9 @@ const AppointmentForm = ({ doctor, onAppointmentBooked }) => {
 
     return (
         <div className="overflow-y-auto">
-             {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
-             {success && <div className="bg-green-100 text-green-700 p-3 rounded-md mb-4">{success}</div>}
-             <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
+            {success && <div className="bg-green-100 text-green-700 p-3 rounded-md mb-4">{success}</div>}
+            <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Select Date</label>
                     <input type="date" min={today} value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} className="w-full p-3 border rounded-lg"/>
@@ -361,24 +361,24 @@ const DashboardHome = () => {
 
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex justify-between items-center mb-4">
-                     <h2 className="text-xl font-semibold text-gray-900">Upcoming Appointments</h2>
-                     <button onClick={() => setIsViewAllModalOpen(true)} className="text-sm font-semibold text-blue-600 hover:text-blue-800">View All</button>
+                    <h2 className="text-xl font-semibold text-gray-900">Upcoming Appointments</h2>
+                    <button onClick={() => setIsViewAllModalOpen(true)} className="text-sm font-semibold text-blue-600 hover:text-blue-800">View All</button>
                 </div>
                 <div className="space-y-4">
                     {upcomingAppointments.length > 0 ? upcomingAppointments.map(appt => (
-                         <div key={appt._id} className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg">
-                             <div className="flex items-center space-x-4">
-                                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border"><span className="text-blue-600 font-semibold">{getInitials(appt.doctor.name)}</span></div>
-                                 <div>
-                                     <h3 className="font-semibold text-gray-900">{appt.doctor.name}</h3>
-                                     <p className="text-sm text-gray-500">{appt.doctor.speciality}</p>
-                                 </div>
-                             </div>
-                             <div className="text-right">
-                                 <p className="font-medium text-gray-900">{new Date(appt.appointmentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</p>
-                                 <p className="text-sm text-gray-500">{new Date(`1970-01-01T${appt.timeSlot}:00`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
-                             </div>
-                         </div>
+                        <div key={appt._id} className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg">
+                            <div className="flex items-center space-x-4">
+                                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border"><span className="text-blue-600 font-semibold">{getInitials(appt.doctor.name)}</span></div>
+                                <div>
+                                    <h3 className="font-semibold text-gray-900">{appt.doctor.name}</h3>
+                                    <p className="text-sm text-gray-500">{appt.doctor.speciality}</p>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="font-medium text-gray-900">{new Date(appt.appointmentDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}</p>
+                                <p className="text-sm text-gray-500">{new Date(`1970-01-01T${appt.timeSlot}:00`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
+                            </div>
+                        </div>
                     )) : (
                         <div className="text-center py-8">
                             <Calendar size={32} className="mx-auto text-gray-400 mb-2"/>
@@ -399,6 +399,7 @@ const Appointments = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const navigate = useNavigate(); // ADDED
 
     const fetchAppointments = async () => {
         setLoading(true);
@@ -453,6 +454,7 @@ const Appointments = () => {
         }
     };
 
+    // RECTIFIED: This function now directly navigates based on the API response.
     const handleJoinCall = async (appointmentId) => {
         try {
             const response = await fetch('http://localhost:3000/sessions/create', {
@@ -462,6 +464,8 @@ const Appointments = () => {
             });
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
+            
+            navigate(`/video/${data.roomId}`);
         } catch (error) {
             setError("Error: Could not start video session.");
         }
@@ -654,7 +658,7 @@ const Doctors = () => {
             ) : <div className="text-center py-12"><div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"><Search size={32} className="text-gray-400" /></div><h3 className="text-lg font-medium text-gray-900 mb-2">No doctors found</h3><p className="text-gray-500">Try adjusting your search criteria.</p></div>}
         </div>
     );
-}
+};
 
 // --- Page Component: Profile ---
 const Profile = () => {
@@ -727,8 +731,8 @@ const Profile = () => {
 
     return (
         <div className="p-6 max-w-6xl mx-auto">
-             <div className="flex justify-between items-center mb-6">
-                 <div>
+            <div className="flex justify-between items-center mb-6">
+                <div>
                     <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
                     <p className="text-gray-600 mt-1">Manage your personal information</p>
                 </div>
@@ -756,7 +760,7 @@ const Profile = () => {
                         </div>
                         <div className="space-y-3">
                             <div className="flex items-center space-x-3 text-gray-600"><Mail size={18} className="text-blue-500" /><span className="text-sm">{user.email}</span></div>
-                             <div className="flex items-center space-x-3 text-gray-600"><Phone size={18} className="text-blue-500" /><span className="text-sm">{user.phoneNumber}</span></div>
+                            <div className="flex items-center space-x-3 text-gray-600"><Phone size={18} className="text-blue-500" /><span className="text-sm">{user.phoneNumber}</span></div>
                             <div className="flex items-center space-x-3 text-gray-600"><MapPin size={18} className="text-blue-500" />
                                 {isEditing ? <input type="text" name="locality" value={formData.locality || ''} onChange={handleChange} className="w-full text-sm border-b focus:outline-none focus:border-blue-500"/> : <span className="text-sm">{user.locality}</span>}
                             </div>
@@ -771,9 +775,9 @@ const Profile = () => {
                                 <label className="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
                                 {isEditing ? <input type="text" name="name" value={formData.name || ''} onChange={handleChange} className="w-full p-2 border rounded-md"/> : <p className="text-gray-900">{user.name}</p>}
                             </div>
-                             <div>
+                            <div>
                                 <label className="block text-sm font-medium text-gray-500 mb-1">Language</label>
-                                 {isEditing ? (
+                                {isEditing ? (
                                     <select name="language" value={formData.language} onChange={handleChange} className="w-full p-2 border rounded-md">
                                         <option value="english">English</option>
                                         <option value="hindi">Hindi</option>
@@ -798,7 +802,32 @@ const Profile = () => {
 };
 
 // --- Page Component: ChatBot (Placeholder) ---
+// const ChatBot = () => { /* ... Your ChatBot component code ... */ };
 
+// --- Placeholder for ViewAllAppointmentsModal (if it exists) ---
+const ViewAllAppointmentsModal = ({ onClose, allAppointments }) => {
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+            <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col">
+                <div className="flex justify-between items-center mb-4 pb-4 border-b">
+                    <h3 className="text-xl font-bold text-gray-800">All Appointments</h3>
+                    <button onClick={onClose} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><X size={22} /></button>
+                </div>
+                <div className="overflow-y-auto space-y-2">
+                    {allAppointments.length > 0 ? allAppointments.map((appt) => (
+                        <div key={appt._id} className="p-3 bg-gray-50 rounded-lg">
+                            <p className="font-semibold text-gray-800">{appt.doctor.name}</p>
+                            <p className="text-sm text-gray-500">{new Date(appt.appointmentDate).toLocaleDateString()} at {appt.timeSlot}</p>
+                            <span className={`text-xs font-medium px-2 py-1 rounded-full ${appt.status === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                                {appt.status}
+                            </span>
+                        </div>
+                    )) : <p>No appointments to show.</p>}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 // --- Main UserDashboard Component ---
 const UserDashboard = () => {
@@ -814,23 +843,17 @@ const UserDashboard = () => {
             }
         };
 
-        const handleSessionCreated = ({ roomId }) => {
-            navigate(`/video/${roomId}`);
-        };
-
+        // RECTIFIED: Removed the session-created listener from here.
         if (socket.connected) {
             handleConnect();
         } else {
             socket.on('connect', handleConnect);
         }
 
-        socket.on('session-created', handleSessionCreated);
-
         return () => {
             socket.off('connect', handleConnect);
-            socket.off('session-created', handleSessionCreated);
         };
-    }, [navigate]);
+    }, []); // RECTIFIED: Removed navigate from dependency array
 
     const renderPage = () => {
         switch (activePage) {
@@ -855,4 +878,3 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
-

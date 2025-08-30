@@ -21,7 +21,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onClose }) => {
         { name: 'Profile', icon: HeartPulse, tab: 'profile' },
         { name: 'Settings', icon: Settings, tab: 'settings' },
     ];
-  
+ 
     const handleLogout = async () => {
         try {
             await fetch('http://localhost:3000/doctor/logout', { method: 'POST' });
@@ -132,6 +132,7 @@ const DashboardHome = ({ setActiveTab }) => {
     const [upcomingAppointments, setUpcomingAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -175,6 +176,7 @@ const DashboardHome = ({ setActiveTab }) => {
         fetchDashboardData();
     }, []);
 
+    // RECTIFIED: This function now directly handles navigation
     const handleJoinCall = async (appointmentId) => {
         try {
             const response = await fetch('http://localhost:3000/sessions/create', {
@@ -184,6 +186,8 @@ const DashboardHome = ({ setActiveTab }) => {
             });
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
+            
+            navigate(`/video/${data.roomId}`);
         } catch (error) {
             alert("Error: Could not start the video session.");
         }
@@ -245,6 +249,7 @@ const ManageAppointments = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
     
     const fetchAppointments = async () => {
         setLoading(true);
@@ -281,6 +286,7 @@ const ManageAppointments = () => {
         }
     };
     
+    // RECTIFIED: This function now directly handles navigation
     const handleJoinCall = async (appointmentId) => {
         try {
             const response = await fetch('http://localhost:3000/sessions/create', {
@@ -290,6 +296,8 @@ const ManageAppointments = () => {
             });
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
+            
+            navigate(`/video/${data.roomId}`);
         } catch (error) {
             alert("Error: Could not start video session.");
         }
@@ -646,4 +654,3 @@ const DoctorDashboard = () => {
 };
 
 export default DoctorDashboard;
-

@@ -21,7 +21,8 @@ router.post('/create', async (req, res) => {
         // Check if session already exists for this appointment
         const existingSession = await Session.findOne({ appointmentId });
         if (existingSession) {
-            // If session exists, just notify participants to join
+            // If session exists, just return the existing roomId
+            // and notify participants via socket.io
             req.io.to(`user_${appointment.user}`).emit('session-created', {
                 roomId: existingSession.roomId,
                 appointmentId
@@ -32,7 +33,8 @@ router.post('/create', async (req, res) => {
             });
             return res.status(200).json({ 
                 success: true, 
-                session: existingSession 
+                roomId: existingSession.roomId, // RECTIFIED
+                message: 'Session already exists'
             });
         }
 
@@ -59,7 +61,8 @@ router.post('/create', async (req, res) => {
 
         res.status(201).json({ 
             success: true, 
-            session 
+            roomId: session.roomId, // RECTIFIED
+            message: 'Session created successfully'
         });
     } catch (error) {
         res.status(500).json({ 
@@ -156,4 +159,3 @@ router.post('/end/:roomId', async (req, res) => {
 });
 
 module.exports = router;
-
