@@ -11,6 +11,7 @@ const userRoutes = require('./routes/user.route.js');
 const doctorRoutes = require('./routes/doctor.route.js');
 const appointmentRoutes = require('./routes/appointment.route.js');
 const sessionRoutes = require('./routes/session.route.js');
+const chatbotRoutes = require('./routes/chatbot.route.js');
 
 // Initialize app and server
 dotenv.config();
@@ -42,6 +43,7 @@ app.use('/user', userRoutes);
 app.use('/doctor', doctorRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/sessions', sessionRoutes);
+app.use('/chatbot', chatbotRoutes);
 
 // Health check route
 app.get('/', (req, res) => {
