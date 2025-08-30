@@ -10,14 +10,15 @@ import UserLogin from "./components/Landing/UserLogin.jsx";
 import UserSignup from "./components/Landing/UserSignup.jsx";
 import DoctorLogin from "./components/Landing/DoctorLogin.jsx";
 import DoctorSignup from "./components/Landing/DoctorSignup.jsx";
-import NotFound from "./components/Landing/NotFound.jsx";
+
 
 // Dashboards
 import DoctorDashboard from "./Dashboard/Doctor/DoctorDashboard.jsx";
+import NotFound from "./components/Landing/NotFound.jsx";
 
 // Services page
-import Services from "./components/Landing/Services.jsx";
-import NotFound from "./components/Landing/NotFound.jsx"; 
+
+
 import UserDashboard from "./Dashboard/User/UserDashboard.jsx";
 
 import "./index.css";

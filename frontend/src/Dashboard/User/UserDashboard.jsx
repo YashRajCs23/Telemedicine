@@ -4,33 +4,12 @@ import DashboardHome from "./DashboardHome";
 import Appointments from "./Appointments";
 import Doctors from "./Doctors";
 import Profile from "./Profile";
-<<<<<<< HEAD
 import Settings from "./Settings";
 import Header from "./Header";
-
-const UserDashboard = () => {
-=======
 import ChatBot from "./ChatBot";
+import Notifications from "./Notifications"; // ✅ You forgot this import
 
 const UserDashboard = () => {
-  const [activePage, setActivePage] = useState("home");
-
-  const renderPage = () => {
-    switch (activePage) {
-      case "appointments":
-        return <Appointments />;
-      case "doctors":
-        return <Doctors />;
-      case "profile":
-        return <Profile />;
-      case "chatbot":
-        return <ChatBot />
-      default:
-        return <DashboardHome />;
-    }
-  };
-
->>>>>>> a922a95bf75ee2c488cd5f565d0c9a0ca792a6b1
   return (
     <div className="flex bg-gray-50 min-h-screen">
       {/* Sidebar */}
@@ -50,6 +29,7 @@ const UserDashboard = () => {
             <Route path="notifications" element={<Notifications />} />
             <Route path="profile" element={<Profile />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="chatbot" element={<ChatBot />} />
           </Routes>
         </main>
       </div>

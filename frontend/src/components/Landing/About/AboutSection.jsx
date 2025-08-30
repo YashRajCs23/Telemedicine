@@ -50,8 +50,8 @@ const AboutSection = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      title: "Advanced Diagnostics",
-      description: "State-of-the-art medical equipment and cutting-edge diagnostic technologies"
+      title: "Quick Diagnostics",
+      description: "AI based Chatbot that helps users to get quick problem to there solution"
     },
     {
       icon: (
@@ -285,7 +285,7 @@ const AboutSection = () => {
         </div>
 
         {/* Call to Action */}
-        <div className="text-center bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-12 lg:p-16 text-white">
+        <div className="text-center bg-gradient-to-r from-indigo-600 to-sky-600 rounded-3xl p-12 lg:p-16 text-white">
           <h3 className="text-3xl lg:text-4xl font-bold mb-6">
             Ready to Experience Excellence in Healthcare?
           </h3>

@@ -19,7 +19,12 @@ const Last = () => {
 
         {/* Book Now Button */}
         <div>
-          <BookButton color="bg-black" textColor="text-white" />
+          <BookButton
+          color="bg-black"
+          textColor="text-white"
+          hover="hover:from-sky-400 hover:to-blue-600 hover:shadow-lg hover:shadow-blue-300"
+          
+        />
         </div>
       </div>
     </section>

@@ -7,7 +7,7 @@ export default function Footer() {
         
         {/* Brand Info */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-3">TeleHealth</h2>
+          <h2 className="text-2xl font-bold text-white mb-3">DOXY</h2>
           <p className="text-sm text-gray-300">
             Your trusted telemedicine partner. Connect with doctors anytime, anywhere.
           </p>
