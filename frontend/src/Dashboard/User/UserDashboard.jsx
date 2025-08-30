@@ -3,8 +3,8 @@ import Sidebar from "./Sidebar";
 import DashboardHome from "./DashboardHome";
 import Appointments from "./Appointments";
 import Doctors from "./Doctors";
-import Notifications from "./Notifications";
 import Profile from "./Profile";
+import ChatBot from "./ChatBot";
 
 const UserDashboard = () => {
   const [activePage, setActivePage] = useState("home");
@@ -17,6 +17,8 @@ const UserDashboard = () => {
         return <Doctors />;
       case "profile":
         return <Profile />;
+      case "chatbot":
+        return <ChatBot />
       default:
         return <DashboardHome />;
     }

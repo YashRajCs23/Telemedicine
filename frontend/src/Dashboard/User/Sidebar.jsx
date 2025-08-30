@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Calendar, Stethoscope, User, Menu, X, LogOut } from "lucide-react";
+import { Home, Calendar, Stethoscope, User, Menu, X, LogOut, Bot } from "lucide-react";
 
 const Sidebar = ({ setActivePage, activePage }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +29,7 @@ const Sidebar = ({ setActivePage, activePage }) => {
         { name: "Dashboard", icon: <Home />, page: "home" },
         { name: "Appointments", icon: <Calendar />, page: "appointments" },
         { name: "Doctors", icon: <Stethoscope />, page: "doctors" },
+        {name: "Chatbot", icon: <Bot />, page: "chatbot"},
         { name: "Profile", icon: <User />, page: "profile" }
     ];
 
