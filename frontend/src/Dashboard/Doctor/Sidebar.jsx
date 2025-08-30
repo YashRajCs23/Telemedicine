@@ -15,7 +15,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onClose }) => {
   
   const handleLogout = async () => {
       try {
-          const response = await fetch('http://localhost:3000/user/logout', {
+          const response = await fetch('http://localhost:3000/doctor/logout', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onClose }) => {
         <div className="flex items-center justify-between mb-12">
           <div className="flex items-center">
             <Stethoscope size={32} className="text-blue-500 mr-2" />
-            <span className="text-xl font-bold">HealthCare</span>
+            <span className="text-xl font-bold">DOXY</span>
           </div>
           <button onClick={onClose} className="lg:hidden p-2 text-gray-400 hover:bg-gray-800 rounded-lg transition-colors">
             <X size={20} />

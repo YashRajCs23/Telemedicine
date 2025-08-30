@@ -3,7 +3,6 @@ const router = express.Router();
 const Doctor = require('../models/doctor.model.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const localStorage = require('localStorage');
 require('dotenv').config();
 
 // Helper function to generate token
@@ -89,8 +88,6 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // localStorage.setItem('doctorId', doctor._id);
-
         // Generate JWT token
         const token = generateToken({ doctorId: doctor._id });
 
@@ -120,5 +117,22 @@ router.get('/profile/:id', async (req, res) => {
     }
 });
 
+// --- NEW --- GET All Doctors
+router.get('/', async (req, res) => {
+    try {
+        const doctors = await Doctor.find({}).select('-password');
+        res.status(200).json(doctors);
+    } catch (error) {
+        res.status(500).json({ message: "Server error fetching doctors list", error: error.message });
+    }
+});
+
+// --- NEW --- Logout doctor
+router.post('/logout', (req, res) => {
+    // With JWT, logout is primarily handled on the client-side.
+    // This server endpoint is here to formally acknowledge the logout action.
+    res.status(200).json({ message: 'Logout successful' });
+});
 
 module.exports = router;
+

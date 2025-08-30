@@ -5,7 +5,6 @@ import Appointments from "./Appointments";
 import Doctors from "./Doctors";
 import Notifications from "./Notifications";
 import Profile from "./Profile";
-import Settings from "./Settings";
 
 const UserDashboard = () => {
   const [activePage, setActivePage] = useState("home");
@@ -16,12 +15,8 @@ const UserDashboard = () => {
         return <Appointments />;
       case "doctors":
         return <Doctors />;
-      case "notifications":
-        return <Notifications />;
       case "profile":
         return <Profile />;
-      case "settings":
-        return <Settings />;
       default:
         return <DashboardHome />;
     }
