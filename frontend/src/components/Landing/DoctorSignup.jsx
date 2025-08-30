@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; // <-- Add this import
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   User,
   Phone,
@@ -15,20 +15,20 @@ import {
 
 export default function DoctorSignup() {
   const [form, setForm] = useState({
-  name: "",
-  phoneNumber: "",
-  locality: "",
-  yearsOfExperience: "",
-  email: "",
-  password: "",
-  speciality: "", 
-});
+    name: "",
+    phoneNumber: "",
+    locality: "",
+    yearsOfExperience: "",
+    email: "",
+    password: "",
+    speciality: "", // Corrected field name to match backend
+  });
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
-  const navigate = useNavigate(); // <-- Add this line
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -57,6 +57,7 @@ export default function DoctorSignup() {
 
     setLoading(true);
     setSuccess(false);
+    setErrors({});
 
     try {
       const res = await fetch("http://localhost:3000/doctor/register", {
@@ -65,33 +66,30 @@ export default function DoctorSignup() {
         body: JSON.stringify(form),
       });
 
-      if (!res.ok) {
-        console.error("❌ Registration failed:", res.error);
-        setErrors({ submit: "Failed to register. Please try again." });
-        return;
-      }
-
       const data = await res.json();
-      console.log("✅ Registration success:", data);
+
+      if (!res.ok) {
+        // Now correctly handles server-side error messages
+        throw new Error(data.message || "Failed to register. Please try again.");
+      }
 
       setSuccess(true);
       setForm({
         name: "",
         phoneNumber: "",
         locality: "",
-        experience: "",
+        yearsOfExperience: "",
         email: "",
         password: "",
-        specialty: "",
+        speciality: "",
       });
-      setErrors({});
-      // Redirect to login page after successful registration
+      
       setTimeout(() => {
         navigate("/doctor/login");
-      }, 1000); // Optional: 1s delay to show success message
+      }, 1500);
+
     } catch (error) {
-      console.error("❌ Error:", error);
-      setErrors({ submit: "Something went wrong. Try again later." });
+      setErrors({ submit: error.message });
     } finally {
       setLoading(false);
     }
@@ -100,7 +98,6 @@ export default function DoctorSignup() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-50 px-4">
       <div className="w-full max-w-lg bg-white shadow-2xl rounded-2xl p-8">
-        {/* Header */}
         <h1 className="text-3xl font-bold text-center text-blue-700 mb-2">
           Doctor Registration
         </h1>
@@ -110,7 +107,7 @@ export default function DoctorSignup() {
 
         {success && (
           <p className="text-green-600 text-center font-medium mb-4">
-            ✅ Registration successful!
+            ✅ Registration successful! Redirecting to login...
           </p>
         )}
         {errors.submit && (
@@ -119,9 +116,7 @@ export default function DoctorSignup() {
           </p>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Name */}
           <InputField
             icon={User}
             label="Full Name"
@@ -131,8 +126,6 @@ export default function DoctorSignup() {
             onChange={handleChange}
             required
           />
-
-          {/* Phone Number */}
           <InputField
             icon={Phone}
             label="Phone Number"
@@ -143,8 +136,6 @@ export default function DoctorSignup() {
             error={errors.phoneNumber}
             required
           />
-
-          {/* Locality */}
           <InputField
             icon={MapPin}
             label="Locality"
@@ -154,20 +145,16 @@ export default function DoctorSignup() {
             onChange={handleChange}
             required
           />
-
-          {/* Experience */}
           <InputField
             icon={Briefcase}
             label="Experience (Years)"
             name="yearsOfExperience"
             type="number"
             placeholder="5"
-            value={form.experience}
+            value={form.yearsOfExperience}
             onChange={handleChange}
             required
           />
-
-          {/* Email */}
           <InputField
             icon={Mail}
             label="Email Address"
@@ -178,12 +165,8 @@ export default function DoctorSignup() {
             error={errors.email}
             required
           />
-
-          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Password
-            </label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Password</label>
             <div className="flex items-center border rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
               <Lock className="h-5 w-5 text-gray-400 mr-2" />
               <input
@@ -193,38 +176,24 @@ export default function DoctorSignup() {
                 value={form.password}
                 onChange={handleChange}
                 required
-                className="w-full outline-none text-gray-700 placeholder-gray-400"
+                className="w-full outline-none text-gray-700 placeholder-gray-400 bg-transparent"
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="ml-2 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? (
-                  <EyeOff className="h-5 w-5" />
-                ) : (
-                  <Eye className="h-5 w-5" />
-                )}
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="ml-2 text-gray-400 hover:text-gray-600">
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
               </button>
             </div>
-            {errors.password && (
-              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
-
-          {/* Specialty Dropdown */}
           <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Specialty
-            </label>
+            <label className="block text-sm font-medium text-gray-600 mb-1">Specialty</label>
             <div className="flex items-center border rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
               <Stethoscope className="h-5 w-5 text-gray-400 mr-2" />
               <select
                 name="speciality"
-                value={form.specialty}
+                value={form.speciality} // CORRECTED: Was form.specialty
                 onChange={handleChange}
                 required
-                className="w-full outline-none text-gray-700 placeholder-gray-400 bg-transparent"
+                className="w-full outline-none text-gray-700 bg-transparent"
               >
                 <option value="">Select Specialty</option>
                 <option value="General Physician">General Physician</option>
@@ -241,13 +210,7 @@ export default function DoctorSignup() {
               </select>
             </div>
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg transition-all duration-300 disabled:opacity-50"
-          >
+          <button type="submit" disabled={loading} className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl shadow-lg transition-all duration-300 disabled:opacity-50">
             {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Register"}
           </button>
         </form>
@@ -256,23 +219,10 @@ export default function DoctorSignup() {
   );
 }
 
-/* ✅ Reusable Input Field Component */
-function InputField({
-  icon: Icon,
-  label,
-  name,
-  value,
-  onChange,
-  placeholder,
-  type = "text",
-  required,
-  error,
-}) {
+function InputField({ icon: Icon, label, name, value, onChange, placeholder, type = "text", required, error }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-600 mb-1">
-        {label}
-      </label>
+      <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
       <div className="flex items-center border rounded-xl px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-400">
         <Icon className="h-5 w-5 text-gray-400 mr-2" />
         <input
@@ -282,7 +232,7 @@ function InputField({
           value={value}
           onChange={onChange}
           required={required}
-          className="w-full outline-none text-gray-700 placeholder-gray-400"
+          className="w-full outline-none text-gray-700 placeholder-gray-400 bg-transparent"
         />
       </div>
       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}

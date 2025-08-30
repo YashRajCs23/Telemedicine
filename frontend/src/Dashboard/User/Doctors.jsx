@@ -1,5 +1,188 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Star, MapPin, AlertCircle, X, Calendar, Clock } from "lucide-react";
+import { Search, Star, MapPin, AlertCircle,ChevronLeft, X, Calendar, Clock } from "lucide-react";
+
+const BookingModal = ({ onClose, onAppointmentBooked }) => {
+    const [view, setView] = useState('list');
+    const [doctors, setDoctors] = useState([]);
+    const [filteredDoctors, setFilteredDoctors] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const fetchDoctorsList = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/doctor');
+                if (!response.ok) throw new Error("Could not fetch doctors list.");
+                const data = await response.json();
+                setDoctors(data);
+                setFilteredDoctors(data);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchDoctorsList();
+    }, []);
+    
+    useEffect(() => {
+        const result = doctors.filter(doc => 
+            doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            doc.speciality.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredDoctors(result);
+    }, [searchTerm, doctors]);
+
+    const handleSelectDoctor = (doctor) => {
+        setSelectedDoctor(doctor);
+        setView('form');
+    };
+    
+    const getInitials = (name) => {
+        if (!name) return 'Dr';
+        const parts = name.replace("Dr. ", "").split(" ");
+        return (parts[0]?.[0] + (parts[1]?.[0] || '')).toUpperCase();
+    };
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 p-4">
+            <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col">
+                <div className="flex justify-between items-center mb-4 pb-4 border-b">
+                    <div className="flex items-center gap-2">
+                        {view === 'form' && (
+                             <button onClick={() => setView('list')} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><ChevronLeft size={22} /></button>
+                        )}
+                        <div>
+                             <h3 className="text-xl font-bold text-gray-800">{view === 'list' ? 'Select a Doctor' : 'Book Appointment'}</h3>
+                            <p className="text-gray-600 text-sm">{view === 'form' && `with ${selectedDoctor.name}`}</p>
+                        </div>
+                    </div>
+                    <button onClick={onClose} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><X size={22} /></button>
+                </div>
+                {view === 'list' ? (
+                    <div className="flex flex-col flex-grow min-h-0">
+                        <div className="relative mb-4">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                            <input type="text" placeholder="Search by name or specialty..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border rounded-lg" />
+                        </div>
+                        <div className="overflow-y-auto space-y-2">
+                             {loading ? <p>Loading doctors...</p> : error ? <p className="text-red-500">{error}</p> : 
+                                filteredDoctors.map(doc => (
+                                    <div key={doc._id} onClick={() => handleSelectDoctor(doc)} className="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
+                                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3"><span className="text-blue-600 font-semibold">{getInitials(doc.name)}</span></div>
+                                        <div><p className="font-semibold text-gray-800">{doc.name}</p><p className="text-sm text-gray-500">{doc.speciality}</p></div>
+                                    </div>
+                                ))
+                             }
+                        </div>
+                    </div>
+                ) : (
+                    <AppointmentForm doctor={selectedDoctor} onAppointmentBooked={onAppointmentBooked} />
+                )}
+            </div>
+        </div>
+    );
+};
+
+const AppointmentForm = ({ doctor, onAppointmentBooked }) => {
+    const [appointmentDate, setAppointmentDate] = useState('');
+    const [timeSlot, setTimeSlot] = useState('');
+    const [reason, setReason] = useState('');
+    const [availableSlots, setAvailableSlots] = useState({});
+    const [loadingSlots, setLoadingSlots] = useState(false);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const potentialTimeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
+
+    useEffect(() => {
+        const checkAvailability = async () => {
+            if (!appointmentDate) return;
+            setLoadingSlots(true);
+            setTimeSlot('');
+            const availability = {};
+            for (const slot of potentialTimeSlots) {
+                try {
+                    const response = await fetch(`http://localhost:3000/appointments/check-slot`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ doctorId: doctor._id, appointmentDate, timeSlot: slot }),
+                    });
+                    const data = await response.json();
+                    availability[slot] = data.available;
+                } catch (err) { availability[slot] = false; }
+            }
+            setAvailableSlots(availability);
+            setLoadingSlots(false);
+        };
+        checkAvailability();
+    }, [appointmentDate, doctor._id]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(''); setSuccess('');
+        if (!appointmentDate || !timeSlot || !reason) {
+            setError("Please fill in all fields."); return;
+        }
+        try {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                setError("You must be logged in to book an appointment."); return;
+            }
+            const response = await fetch(`http://localhost:3000/appointments`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, doctorId: doctor._id, appointmentDate, timeSlot, reason }),
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.message || "Failed to book appointment.");
+            setSuccess("Appointment booked successfully!");
+            setTimeout(onAppointmentBooked, 1500);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+    
+    const today = new Date().toISOString().split('T')[0];
+
+    return (
+        <div className="overflow-y-auto">
+             {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4">{error}</div>}
+             {success && <div className="bg-green-100 text-green-700 p-3 rounded-md mb-4">{success}</div>}
+             <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Select Date</label>
+                    <input type="date" min={today} value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} className="w-full p-3 border rounded-lg"/>
+                </div>
+                {appointmentDate && (
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Available Time Slots</label>
+                        {loadingSlots ? <p>Checking availability...</p> : (
+                            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                                {potentialTimeSlots.map(slot => (
+                                    <button key={slot} type="button" onClick={() => setTimeSlot(slot)} disabled={!availableSlots[slot]}
+                                        className={`p-2 rounded-lg text-sm transition-colors ${timeSlot === slot ? 'bg-blue-600 text-white' : availableSlots[slot] ? 'bg-gray-100 hover:bg-blue-100' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+                                        {new Date(`1970-01-01T${slot}:00`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Reason for Visit</label>
+                    <textarea value={reason} onChange={(e) => setReason(e.target.value)} rows="3" placeholder="Briefly describe the reason for your appointment..." className="w-full p-3 border rounded-lg"/>
+                </div>
+                <div className="pt-2">
+                    <button type="submit" className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700" disabled={!!success}>
+                        Confirm Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
 
 // Appointment Booking Modal Component
 const AppointmentModal = ({ doctor, onClose }) => {
@@ -189,7 +372,7 @@ const DoctorCardSkeleton = () => (
 );
 
 
-export default function Doctors() {
+const Doctors = () => {
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [specialties, setSpecialties] = useState(["All"]);
@@ -197,7 +380,7 @@ export default function Doctors() {
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
 
     useEffect(() => {
@@ -245,18 +428,16 @@ export default function Doctors() {
     
     const handleBookAppointment = (doctor) => {
         setSelectedDoctor(doctor);
-        setIsModalOpen(true);
+        setIsBookingModalOpen(true);
     };
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
-            {isModalOpen && <AppointmentModal doctor={selectedDoctor} onClose={() => setIsModalOpen(false)} />}
-            
+            {isBookingModalOpen && <BookingModal onClose={() => setIsBookingModalOpen(false)} onAppointmentBooked={() => setIsBookingModalOpen(false)} />}
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900">Find Doctors</h1>
                 <p className="text-gray-600 mt-1">Book appointments with qualified healthcare professionals</p>
             </div>
-
             <div className="mb-6 space-y-4">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -270,15 +451,7 @@ export default function Doctors() {
                 </div>
                 <div className="flex space-x-2 overflow-x-auto pb-2">
                     {specialties.map((specialty) => (
-                        <button
-                            key={specialty}
-                            onClick={() => setActiveSpecialty(specialty)}
-                            className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors ${
-                                activeSpecialty === specialty 
-                                ? "bg-blue-600 text-white" 
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                            }`}
-                        >
+                        <button key={specialty} onClick={() => setActiveSpecialty(specialty)} className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors ${activeSpecialty === specialty ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
                             {specialty}
                         </button>
                     ))}
@@ -286,9 +459,7 @@ export default function Doctors() {
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[...Array(3)].map((_, i) => <DoctorCardSkeleton key={i} />)}
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{[...Array(3)].map((_, i) => <div key={i} className="bg-white p-6 rounded-xl shadow-sm border animate-pulse h-64"></div>)}</div>
             ) : error ? (
                  <div className="text-center py-12 text-red-600 bg-red-50 rounded-lg">
                     <AlertCircle className="mx-auto h-12 w-12 mb-4" />
@@ -298,34 +469,18 @@ export default function Doctors() {
             ) : filteredDoctors.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredDoctors.map((doctor) => (
-                        <div 
-                            key={doctor._id} 
-                            className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-lg transition-all flex flex-col"
-                        >
+                        <div key={doctor._id} className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-lg transition-all flex flex-col">
                             <div className="flex-grow">
                                 <div className="flex items-start space-x-4 mb-4">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                                        <span className="text-white font-semibold text-lg">{getInitials(doctor.name)}</span>
-                                    </div>
+                                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center"><span className="text-white font-semibold text-lg">{getInitials(doctor.name)}</span></div>
                                     <div className="flex-1">
                                         <h3 className="text-lg font-semibold text-gray-900">{doctor.name}</h3>
                                         <p className="text-blue-600 font-medium">{doctor.speciality}</p>
-                                        <div className="flex items-center space-x-1 mt-1">
-                                            <Star size={14} className="text-yellow-400 fill-current" />
-                                            <span className="text-sm font-medium text-gray-700">{doctor.rating || 'N/A'}</span>
-                                            <span className="text-sm text-gray-500">({doctor.reviews || 0} reviews)</span>
-                                        </div>
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-500">Experience</span>
-                                        <span className="font-medium text-gray-900">{doctor.yearsOfExperience || 0} years</span>
-                                    </div>
-                                    <div className="flex items-start space-x-2 text-sm">
-                                        <MapPin size={14} className="text-gray-400 mt-0.5" />
-                                        <span className="text-gray-600">{doctor.locality || 'Location not specified'}</span>
-                                    </div>
+                                    <div className="flex items-center justify-between text-sm"><span className="text-gray-500">Experience</span><span className="font-medium text-gray-900">{doctor.yearsOfExperience || 0} years</span></div>
+                                    <div className="flex items-start space-x-2 text-sm"><MapPin size={14} className="text-gray-400 mt-0.5" /><span className="text-gray-600">{doctor.locality || 'Location not specified'}</span></div>
                                 </div>
                             </div>
                             <div className="mt-4 pt-4 border-t">
@@ -338,9 +493,7 @@ export default function Doctors() {
                 </div>
             ) : (
                 <div className="text-center py-12">
-                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Search size={32} className="text-gray-400" />
-                    </div>
+                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"><Search size={32} className="text-gray-400" /></div>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No doctors found</h3>
                     <p className="text-gray-500">Try adjusting your search criteria or check back later.</p>
                 </div>
@@ -348,4 +501,6 @@ export default function Doctors() {
         </div>
     );
 }
+
+export default Doctors;
 

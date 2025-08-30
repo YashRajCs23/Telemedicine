@@ -10,7 +10,12 @@ import UserLogin from "./components/Landing/UserLogin.jsx";
 import UserSignup from "./components/Landing/UserSignup.jsx";
 import DoctorLogin from "./components/Landing/DoctorLogin.jsx";
 import DoctorSignup from "./components/Landing/DoctorSignup.jsx";
+<<<<<<< HEAD
+import NotFound from "./components/Landing/NotFound.jsx";
+import Services from "./components/Landing/Services.jsx";
+=======
 
+>>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
 
 // Dashboards
 import DoctorDashboard from "./Dashboard/Doctor/DoctorDashboard.jsx";
@@ -20,6 +25,8 @@ import NotFound from "./components/Landing/NotFound.jsx";
 
 
 import UserDashboard from "./Dashboard/User/UserDashboard.jsx";
+
+import VideoCall from "./components/VideoCall.jsx";
 
 import "./index.css";
 
@@ -55,6 +62,13 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="dashboard/*" element={<DoctorDashboard />} />
         </Route>
 
+        {/* Services */}
+        <Route path="/services" element={<Services />} />
+
+        {/* Video Call*/}
+        <Route path="/video/:roomId" element={<VideoCall />} />
+
+        {/* 404 Not Found */}
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>

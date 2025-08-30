@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Clock, MapPin, Video, Plus, AlertCircle, XCircle, X, Search, ChevronLeft } from "lucide-react";
+import { Calendar, Clock, MapPin, Video, Plus, AlertCircle, XCircle, X, Search, ChevronLeft, RefreshCw } from "lucide-react";
 
-// --- New Booking Modal Component ---
+// --- Reusable Booking Modal Component (from previous step) ---
 const BookingModal = ({ onClose, onAppointmentBooked }) => {
-    const [view, setView] = useState('list'); // 'list' or 'form'
+    const [view, setView] = useState('list');
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -12,7 +12,6 @@ const BookingModal = ({ onClose, onAppointmentBooked }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    // Fetch all doctors when the modal opens
     useEffect(() => {
         const fetchDoctorsList = async () => {
             try {
@@ -30,7 +29,6 @@ const BookingModal = ({ onClose, onAppointmentBooked }) => {
         fetchDoctorsList();
     }, []);
     
-    // Filter doctors based on search term
     useEffect(() => {
         const result = doctors.filter(doc => 
             doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -69,11 +67,8 @@ const BookingModal = ({ onClose, onAppointmentBooked }) => {
                             </p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
-                        <X size={22} />
-                    </button>
+                    <button onClick={onClose} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><X size={22} /></button>
                 </div>
-
                 {view === 'list' ? (
                     <div className="flex flex-col flex-grow min-h-0">
                         <div className="relative mb-4">
@@ -110,7 +105,6 @@ const BookingModal = ({ onClose, onAppointmentBooked }) => {
     );
 };
 
-// Sub-component for the booking form logic
 const AppointmentForm = ({ doctor, onAppointmentBooked }) => {
     const [appointmentDate, setAppointmentDate] = useState('');
     const [timeSlot, setTimeSlot] = useState('');
@@ -119,7 +113,6 @@ const AppointmentForm = ({ doctor, onAppointmentBooked }) => {
     const [loadingSlots, setLoadingSlots] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
     const potentialTimeSlots = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'];
 
     useEffect(() => {
@@ -130,16 +123,14 @@ const AppointmentForm = ({ doctor, onAppointmentBooked }) => {
             const availability = {};
             for (const slot of potentialTimeSlots) {
                 try {
-                    const response = await fetch('http://localhost:3000/appointments/check-slot', {
+                    const response = await fetch(`http://localhost:3000/appointments/check-slot`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ doctorId: doctor._id, appointmentDate, timeSlot: slot }),
                     });
                     const data = await response.json();
                     availability[slot] = data.available;
-                } catch (err) {
-                    availability[slot] = false;
-                }
+                } catch (err) { availability[slot] = false; }
             }
             setAvailableSlots(availability);
             setLoadingSlots(false);
@@ -149,19 +140,16 @@ const AppointmentForm = ({ doctor, onAppointmentBooked }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
-        setSuccess('');
+        setError(''); setSuccess('');
         if (!appointmentDate || !timeSlot || !reason) {
-            setError("Please fill in all fields.");
-            return;
+            setError("Please fill in all fields."); return;
         }
         try {
             const userId = localStorage.getItem('userId');
             if (!userId) {
-                setError("You must be logged in to book an appointment.");
-                return;
+                setError("You must be logged in to book an appointment."); return;
             }
-            const response = await fetch('http://localhost:3000/appointments', {
+            const response = await fetch(`http://localhost:3000/appointments`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, doctorId: doctor._id, appointmentDate, timeSlot, reason }),
@@ -215,27 +203,11 @@ const AppointmentForm = ({ doctor, onAppointmentBooked }) => {
     );
 };
 
-// Loading skeleton component
-const AppointmentSkeleton = () => (
-    <div className="bg-white p-6 rounded-xl shadow-sm border animate-pulse">
-        <div className="flex items-start justify-between">
-            <div className="flex items-start space-x-4">
-                <div className="w-14 h-14 bg-gray-200 rounded-full"></div>
-                <div className="flex-1 space-y-2">
-                    <div className="h-6 bg-gray-200 rounded w-48"></div>
-                    <div className="h-4 bg-gray-200 rounded w-32"></div>
-                    <div className="h-4 bg-gray-200 rounded w-full mt-3"></div>
-                </div>
-            </div>
-            <div className="h-8 bg-gray-200 rounded-full w-24"></div>
-        </div>
-    </div>
-);
-
-export default function Appointments() {
+// --- Main Appointments Component ---
+const Appointments = () => {
     const [allAppointments, setAllAppointments] = useState([]);
     const [filteredAppointments, setFilteredAppointments] = useState([]);
-    const [activeTab, setActiveTab] = useState('All');
+    const [activeTab, setActiveTab] = useState('Upcoming');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -244,13 +216,11 @@ export default function Appointments() {
         setLoading(true);
         try {
             const userId = localStorage.getItem('userId');
-            if (!userId) {
-                throw new Error("User not found. Please log in.");
-            }
+            if (!userId) throw new Error("User not found. Please log in.");
+            
             const response = await fetch(`http://localhost:3000/appointments/user/${userId}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch your appointments.");
-            }
+            if (!response.ok) throw new Error("Failed to fetch your appointments.");
+            
             const data = await response.json();
             setAllAppointments(data);
         } catch (err) {
@@ -269,52 +239,55 @@ export default function Appointments() {
         today.setHours(0, 0, 0, 0);
 
         let filtered = allAppointments;
-
         if (activeTab === 'Upcoming') {
-            filtered = allAppointments.filter(appt => {
-                const apptDate = new Date(appt.appointmentDate);
-                return apptDate >= today && appt.status !== 'completed' && appt.status !== 'rejected';
-            });
+            filtered = allAppointments.filter(appt => new Date(appt.appointmentDate) >= today && !['completed', 'rejected'].includes(appt.status));
             filtered.sort((a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate));
         } else if (activeTab === 'Past') {
-            filtered = allAppointments.filter(appt => {
-                const apptDate = new Date(appt.appointmentDate);
-                return apptDate < today || appt.status === 'completed' || appt.status === 'rejected';
-            });
+            filtered = allAppointments.filter(appt => new Date(appt.appointmentDate) < today || ['completed', 'rejected'].includes(appt.status));
             filtered.sort((a, b) => new Date(b.appointmentDate) - new Date(a.appointmentDate));
         } else {
             filtered.sort((a, b) => new Date(b.appointmentDate) - new Date(a.appointmentDate));
         }
-        
         setFilteredAppointments(filtered);
     }, [activeTab, allAppointments]);
 
     const handleCancelAppointment = async (appointmentId) => {
         if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
-
         try {
-            const response = await fetch(`http://localhost:3000/appointments/${appointmentId}/status`, {
+            await fetch(`http://localhost:3000/appointments/${appointmentId}/status`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ status: 'rejected' }),
             });
-
-            if (!response.ok) {
-                throw new Error("Failed to cancel the appointment.");
-            }
             fetchAppointments();
+        } catch (err) {
+            setError("Failed to cancel appointment. Please try again.");
+        }
+    };
+
+    const handleJoinCall = async (appointmentId) => {
+        try {
+            const response = await fetch('http://localhost:3000/sessions/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ appointmentId }),
+            });
+            const data = await response.json();
+            if (!data.success) {
+                throw new Error(data.message || "Could not create video session.");
+            }
         } catch (err) {
             setError(err.message);
         }
     };
-
-    const getStatusColor = (status) => {
+    
+    const getStatusInfo = (status) => {
         switch (status) {
-            case 'accepted': return 'bg-green-100 text-green-800';
-            case 'pending': return 'bg-yellow-100 text-yellow-800';
-            case 'completed': return 'bg-blue-100 text-blue-800';
-            case 'rejected': return 'bg-red-100 text-red-800';
-            default: return 'bg-gray-100 text-gray-800';
+            case 'accepted': return { text: 'Confirmed', color: 'bg-green-100 text-green-800 border-green-200' };
+            case 'pending': return { text: 'Pending', color: 'bg-yellow-100 text-yellow-800 border-yellow-200' };
+            case 'completed': return { text: 'Completed', color: 'bg-blue-100 text-blue-800 border-blue-200' };
+            case 'rejected': return { text: 'Cancelled', color: 'bg-red-100 text-red-800 border-red-200' };
+            default: return { text: status, color: 'bg-gray-100 text-gray-800 border-gray-200' };
         }
     };
 
@@ -327,85 +300,66 @@ export default function Appointments() {
     return (
         <div className="p-6 max-w-7xl mx-auto">
             {isBookingModalOpen && <BookingModal onClose={() => setIsBookingModalOpen(false)} onAppointmentBooked={() => { setIsBookingModalOpen(false); fetchAppointments(); }} />}
-
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">My Appointments</h1>
                     <p className="text-gray-600 mt-1">Manage your upcoming and past appointments</p>
                 </div>
-                <button onClick={() => setIsBookingModalOpen(true)} className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <button onClick={() => setIsBookingModalOpen(true)} className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold w-full sm:w-auto justify-center">
                     <Plus size={20} />
                     <span>Book New Appointment</span>
                 </button>
             </div>
-
             <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg w-fit">
-                {['All', 'Upcoming', 'Past'].map(tab => (
-                    <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-2 rounded-md font-medium transition-colors ${activeTab === tab ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>
-                        {tab} Appointments
-                    </button>
+                {['Upcoming', 'Past', 'All'].map(tab => (
+                    <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-2 rounded-md font-medium transition-colors text-sm ${activeTab === tab ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>{tab}</button>
                 ))}
             </div>
-            
             {error && <div className="bg-red-100 text-red-700 p-3 rounded-md mb-4 flex items-center gap-2"><AlertCircle size={18}/> {error}</div>}
-
             {loading ? (
-                <div className="space-y-4">
-                    {[...Array(3)].map((_, i) => <AppointmentSkeleton key={i} />)}
-                </div>
+                <div className="space-y-4">{[...Array(3)].map((_, i) => <div key={i} className="bg-white p-6 rounded-xl shadow-sm border animate-pulse h-48"></div>)}</div>
             ) : filteredAppointments.length > 0 ? (
                 <div className="space-y-4">
-                    {filteredAppointments.map((appt) => (
-                        <div key={appt._id} className="bg-white p-6 rounded-xl shadow-sm border">
-                            <div className="flex items-start justify-between">
+                    {filteredAppointments.map((appt) => {
+                        const statusInfo = getStatusInfo(appt.status);
+                        return (
+                        <div key={appt._id} className="bg-white p-6 rounded-xl shadow-sm border transition-shadow hover:shadow-md">
+                            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
                                 <div className="flex items-start space-x-4">
-                                    <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center">
-                                        <span className="text-blue-600 font-semibold text-lg">
-                                            {getInitials(appt.doctor.name)}
-                                        </span>
+                                    <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <span className="text-blue-600 font-semibold text-xl">{getInitials(appt.doctor.name)}</span>
                                     </div>
-                                    <div className="flex-1">
-                                        <h3 className="text-xl font-semibold text-gray-900">{appt.doctor.name}</h3>
-                                        <p className="text-gray-500 mb-3">{appt.doctor.speciality}</p>
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                            <div className="flex items-center space-x-2 text-gray-600">
-                                                <Calendar size={16} />
-                                                <span>{new Date(appt.appointmentDate).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
-                                            </div>
-                                            <div className="flex items-center space-x-2 text-gray-600">
-                                                <Clock size={16} />
-                                                <span>{new Date(`1970-01-01T${appt.timeSlot}:00`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</span>
-                                            </div>
-                                            <div className="flex items-center space-x-2 text-gray-600">
-                                                <MapPin size={16} />
-                                                <span>{appt.doctor.locality || 'Online'}</span>
-                                            </div>
+                                    <div>
+                                        <div className="flex items-center gap-3 mb-1">
+                                            <h3 className="text-xl font-semibold text-gray-900">{appt.doctor.name}</h3>
+                                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium border ${statusInfo.color}`}>{statusInfo.text}</span>
                                         </div>
+                                        <p className="text-gray-500">{appt.doctor.speciality}</p>
                                     </div>
                                 </div>
-                                <div className="flex flex-col items-end space-y-3">
-                                    <span className={`px-3 py-1 rounded-full text-sm font-medium capitalize ${getStatusColor(appt.status)}`}>
-                                        {appt.status === 'accepted' ? 'Confirmed' : appt.status}
-                                    </span>
-                                    <div className="flex space-x-2">
-                                        {appt.status === 'accepted' && <button className="flex items-center space-x-1 px-3 py-1 bg-green-600 text-white rounded-md text-sm hover:bg-green-700"><Video size={14} /><span>Join Call</span></button>}
-                                        {(appt.status === 'pending' || appt.status === 'accepted') && <button onClick={() => handleCancelAppointment(appt._id)} className="flex items-center space-x-1 px-3 py-1 bg-red-100 text-red-700 rounded-md text-sm hover:bg-red-200"><XCircle size={14}/><span>Cancel</span></button>}
-                                    </div>
+                                <div className="w-full sm:w-auto flex flex-wrap gap-2 pt-2 sm:pt-0">
+                                    {appt.status === 'accepted' && <button onClick={() => handleJoinCall(appt._id)} className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-md text-sm font-semibold hover:bg-green-700"><Video size={16} /><span>Join Call</span></button>}
+                                    {['pending', 'accepted'].includes(appt.status) && <button onClick={() => handleCancelAppointment(appt._id)} className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-red-100 text-red-800 rounded-md text-sm font-semibold hover:bg-red-200"><XCircle size={16}/><span>Cancel</span></button>}
+                                    <button className="flex-1 flex items-center justify-center space-x-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm font-semibold hover:bg-gray-200"><RefreshCw size={16}/><span>Reschedule</span></button>
                                 </div>
                             </div>
+                            <div className="mt-4 pt-4 border-t grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                                <div className="flex items-center space-x-2 text-gray-600"><Calendar size={16} className="text-gray-400" /><span>{new Date(appt.appointmentDate).toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric' })}</span></div>
+                                <div className="flex items-center space-x-2 text-gray-600"><Clock size={16} className="text-gray-400" /><span>{new Date(`1970-01-01T${appt.timeSlot}:00`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</span></div>
+                                <div className="flex items-center space-x-2 text-gray-600"><MapPin size={16} className="text-gray-400" /><span>{appt.doctor.locality || 'Video Consultation'}</span></div>
+                            </div>
                         </div>
-                    ))}
+                    )})}
                 </div>
             ) : (
-                <div className="text-center py-12">
-                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Calendar size={32} className="text-gray-400" />
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No appointments found</h3>
-                    <p className="text-gray-500 mb-6">There are no {activeTab.toLowerCase()} appointments.</p>
+                <div className="text-center py-16 bg-gray-50 rounded-xl">
+                    <Calendar size={40} className="mx-auto text-gray-400" />
+                    <h3 className="text-lg font-medium text-gray-900 mt-4">No appointments found</h3>
+                    <p className="text-gray-500 mt-1">You have no {activeTab.toLowerCase()} appointments.</p>
                 </div>
             )}
         </div>
     );
 }
 
+export default Appointments;

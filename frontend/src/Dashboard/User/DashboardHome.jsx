@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Clock, CheckCircle2, AlertCircle, X, Search, ChevronLeft, Plus, Video, XCircle } from "lucide-react";
+import { Calendar, Clock, CheckCircle2, AlertCircle, X, Search, ChevronLeft, Plus, Video, XCircle, MapPin } from "lucide-react";
 
 // --- Reusable Booking Modal Component ---
 const BookingModal = ({ onClose, onAppointmentBooked }) => {
-    const [view, setView] = useState('list'); // 'list' or 'form'
+    const [view, setView] = useState('list');
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -54,46 +54,27 @@ const BookingModal = ({ onClose, onAppointmentBooked }) => {
                 <div className="flex justify-between items-center mb-4 pb-4 border-b">
                     <div className="flex items-center gap-2">
                         {view === 'form' && (
-                             <button onClick={() => setView('list')} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
-                                <ChevronLeft size={22} />
-                            </button>
+                             <button onClick={() => setView('list')} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><ChevronLeft size={22} /></button>
                         )}
                         <div>
-                             <h3 className="text-xl font-bold text-gray-800">
-                                {view === 'list' ? 'Select a Doctor' : 'Book Appointment'}
-                            </h3>
-                            <p className="text-gray-600 text-sm">
-                                {view === 'form' && `with ${selectedDoctor.name}`}
-                            </p>
+                             <h3 className="text-xl font-bold text-gray-800">{view === 'list' ? 'Select a Doctor' : 'Book Appointment'}</h3>
+                            <p className="text-gray-600 text-sm">{view === 'form' && `with ${selectedDoctor.name}`}</p>
                         </div>
                     </div>
-                    <button onClick={onClose} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full">
-                        <X size={22} />
-                    </button>
+                    <button onClick={onClose} className="p-2 text-gray-500 hover:bg-gray-100 rounded-full"><X size={22} /></button>
                 </div>
                 {view === 'list' ? (
                     <div className="flex flex-col flex-grow min-h-0">
                         <div className="relative mb-4">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                            <input
-                                type="text"
-                                placeholder="Search by name or specialty..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border rounded-lg"
-                            />
+                            <input type="text" placeholder="Search by name or specialty..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2 border rounded-lg" />
                         </div>
                         <div className="overflow-y-auto space-y-2">
                              {loading ? <p>Loading doctors...</p> : error ? <p className="text-red-500">{error}</p> : 
                                 filteredDoctors.map(doc => (
                                     <div key={doc._id} onClick={() => handleSelectDoctor(doc)} className="flex items-center p-3 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                                            <span className="text-blue-600 font-semibold">{getInitials(doc.name)}</span>
-                                        </div>
-                                        <div>
-                                            <p className="font-semibold text-gray-800">{doc.name}</p>
-                                            <p className="text-sm text-gray-500">{doc.speciality}</p>
-                                        </div>
+                                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3"><span className="text-blue-600 font-semibold">{getInitials(doc.name)}</span></div>
+                                        <div><p className="font-semibold text-gray-800">{doc.name}</p><p className="text-sm text-gray-500">{doc.speciality}</p></div>
                                     </div>
                                 ))
                              }
@@ -214,14 +195,13 @@ const ViewAllAppointmentsModal = ({ onClose, allAppointments }) => {
     useEffect(() => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-
         let filtered = allAppointments;
 
         if (activeTab === 'Upcoming') {
-            filtered = allAppointments.filter(appt => new Date(appt.appointmentDate) >= today && appt.status !== 'completed' && appt.status !== 'rejected');
+            filtered = allAppointments.filter(appt => new Date(appt.appointmentDate) >= today && !['completed', 'rejected'].includes(appt.status));
             filtered.sort((a, b) => new Date(a.appointmentDate) - new Date(b.appointmentDate));
         } else if (activeTab === 'Past') {
-            filtered = allAppointments.filter(appt => new Date(appt.appointmentDate) < today || appt.status === 'completed' || appt.status === 'rejected');
+            filtered = allAppointments.filter(appt => new Date(appt.appointmentDate) < today || ['completed', 'rejected'].includes(appt.status));
             filtered.sort((a, b) => new Date(b.appointmentDate) - new Date(a.appointmentDate));
         } else {
             filtered.sort((a, b) => new Date(b.appointmentDate) - new Date(a.appointmentDate));
@@ -229,9 +209,16 @@ const ViewAllAppointmentsModal = ({ onClose, allAppointments }) => {
         setFilteredAppointments(filtered);
     }, [activeTab, allAppointments]);
     
-    const getStatusColor = (status) => {
-        // ... (status color logic)
+    const getStatusInfo = (status) => {
+        switch (status) {
+            case 'accepted': return { text: 'Confirmed', color: 'bg-green-100 text-green-800' };
+            case 'pending': return { text: 'Pending', color: 'bg-yellow-100 text-yellow-800' };
+            case 'completed': return { text: 'Completed', color: 'bg-blue-100 text-blue-800' };
+            case 'rejected': return { text: 'Cancelled', color: 'bg-red-100 text-red-800' };
+            default: return { text: status, color: 'bg-gray-100 text-gray-800' };
+        }
     };
+
     const getInitials = (name) => {
         if (!name) return 'Dr';
         const parts = name.replace("Dr. ", "").split(" ");
@@ -251,7 +238,9 @@ const ViewAllAppointmentsModal = ({ onClose, allAppointments }) => {
                     ))}
                 </div>
                 <div className="overflow-y-auto space-y-3">
-                    {filteredAppointments.length > 0 ? filteredAppointments.map(appt => (
+                    {filteredAppointments.length > 0 ? filteredAppointments.map(appt => {
+                        const statusInfo = getStatusInfo(appt.status);
+                        return (
                         <div key={appt._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                             <div className="flex items-center space-x-4">
                                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"><span className="text-blue-600 font-semibold">{getInitials(appt.doctor.name)}</span></div>
@@ -260,9 +249,9 @@ const ViewAllAppointmentsModal = ({ onClose, allAppointments }) => {
                                     <p className="text-sm text-gray-500">{new Date(appt.appointmentDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - {new Date(`1970-01-01T${appt.timeSlot}:00`).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</p>
                                 </div>
                             </div>
-                            <span className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(appt.status)}`}>{appt.status === 'accepted' ? 'Confirmed' : appt.status}</span>
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium capitalize ${statusInfo.color}`}>{statusInfo.text}</span>
                         </div>
-                    )) : <p className="text-center text-gray-500 py-8">No appointments found in this category.</p>}
+                    )}) : <p className="text-center text-gray-500 py-8">No appointments found in this category.</p>}
                 </div>
             </div>
         </div>
@@ -277,7 +266,7 @@ const DashboardHome = () => {
     const [upcomingAppointments, setUpcomingAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-    const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false); // New state for view all modal
+    const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
 
     const fetchData = async () => {
         setLoading(true);
@@ -294,11 +283,11 @@ const DashboardHome = () => {
             const apptResponse = await fetch(`http://localhost:3000/appointments/user/${userId}`);
             if (apptResponse.ok) {
                 const appointments = await apptResponse.json();
-                setAllAppointments(appointments); // Store all appointments
+                setAllAppointments(appointments);
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
 
-                const upcoming = appointments.filter(a => new Date(a.appointmentDate) >= today && a.status !== 'completed' && a.status !== 'rejected');
+                const upcoming = appointments.filter(a => new Date(a.appointmentDate) >= today && !['completed', 'rejected'].includes(a.status));
                 
                 setStats({
                     total: appointments.length,
@@ -325,49 +314,38 @@ const DashboardHome = () => {
         const parts = name.replace("Dr. ", "").split(" ");
         return (parts[0]?.[0] + (parts[1]?.[0] || '')).toUpperCase();
     };
-
-    if (loading) {
-        return <div className="p-6 text-center">Loading your dashboard...</div>;
-    }
-
+    
     return (
-        <div className="p-6 space-y-6 max-w-7xl mx-auto">
+        <div className="p-6 space-y-8 max-w-7xl mx-auto">
             {isBookingModalOpen && <BookingModal onClose={() => setIsBookingModalOpen(false)} onAppointmentBooked={() => { setIsBookingModalOpen(false); fetchData(); }} />}
             {isViewAllModalOpen && <ViewAllAppointmentsModal onClose={() => setIsViewAllModalOpen(false)} allAppointments={allAppointments} />}
             
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 bg-blue-50 rounded-xl">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">Welcome back, {userName}! 👋</h1>
                     <p className="text-gray-600 mt-1">Here's a summary of your health activities.</p>
                 </div>
-                <button onClick={() => setIsBookingModalOpen(true)} className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <button onClick={() => setIsBookingModalOpen(true)} className="flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm">
                     <Plus size={18} />
                     <span>Book an Appointment</span>
                 </button>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {/* Stat cards */}
-                <div className="bg-white p-5 rounded-xl shadow-sm border flex items-center gap-4"><div className="bg-blue-100 p-3 rounded-full"><Calendar className="w-6 h-6 text-blue-600" /></div><div><p className="text-sm text-gray-500">Total</p><p className="text-2xl font-bold">{stats.total}</p></div></div>
-                <div className="bg-white p-5 rounded-xl shadow-sm border flex items-center gap-4"><div className="bg-orange-100 p-3 rounded-full"><Clock className="w-6 h-6 text-orange-600" /></div><div><p className="text-sm text-gray-500">Upcoming</p><p className="text-2xl font-bold">{stats.upcoming}</p></div></div>
-                <div className="bg-white p-5 rounded-xl shadow-sm border flex items-center gap-4"><div className="bg-green-100 p-3 rounded-full"><CheckCircle2 className="w-6 h-6 text-green-600" /></div><div><p className="text-sm text-gray-500">Completed</p><p className="text-2xl font-bold">{stats.completed}</p></div></div>
-                <div className="bg-white p-5 rounded-xl shadow-sm border flex items-center gap-4"><div className="bg-yellow-100 p-3 rounded-full"><AlertCircle className="w-6 h-6 text-yellow-600" /></div><div><p className="text-sm text-gray-500">Pending</p><p className="text-2xl font-bold">{stats.pending}</p></div></div>
+                <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-5 rounded-xl flex items-center gap-4"><div className="bg-white p-3 rounded-full shadow-sm"><Calendar className="w-6 h-6 text-blue-600" /></div><div><p className="text-sm text-gray-600">Total</p><p className="text-2xl font-bold text-gray-900">{stats.total}</p></div></div>
+                <div className="bg-gradient-to-br from-orange-50 to-amber-100 p-5 rounded-xl flex items-center gap-4"><div className="bg-white p-3 rounded-full shadow-sm"><Clock className="w-6 h-6 text-orange-600" /></div><div><p className="text-sm text-gray-600">Upcoming</p><p className="text-2xl font-bold text-gray-900">{stats.upcoming}</p></div></div>
+                <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-5 rounded-xl flex items-center gap-4"><div className="bg-white p-3 rounded-full shadow-sm"><CheckCircle2 className="w-6 h-6 text-green-600" /></div><div><p className="text-sm text-gray-600">Completed</p><p className="text-2xl font-bold text-gray-900">{stats.completed}</p></div></div>
+                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-5 rounded-xl flex items-center gap-4"><div className="bg-white p-3 rounded-full shadow-sm"><AlertCircle className="w-6 h-6 text-yellow-600" /></div><div><p className="text-sm text-gray-600">Pending</p><p className="text-2xl font-bold text-gray-900">{stats.pending}</p></div></div>
             </div>
-
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <div className="flex justify-between items-center mb-4">
                      <h2 className="text-xl font-semibold text-gray-900">Upcoming Appointments</h2>
-                     <button onClick={() => setIsViewAllModalOpen(true)} className="text-sm font-semibold text-blue-600 hover:text-blue-800">
-                        View All
-                    </button>
+                     <button onClick={() => setIsViewAllModalOpen(true)} className="text-sm font-semibold text-blue-600 hover:text-blue-800">View All</button>
                 </div>
                 <div className="space-y-4">
                     {upcomingAppointments.length > 0 ? upcomingAppointments.map(appt => (
                          <div key={appt._id} className="flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-lg">
                              <div className="flex items-center space-x-4">
-                                 <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                     <span className="text-blue-600 font-semibold">{getInitials(appt.doctor.name)}</span>
-                                 </div>
+                                 <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center border"><span className="text-blue-600 font-semibold">{getInitials(appt.doctor.name)}</span></div>
                                  <div>
                                      <h3 className="font-semibold text-gray-900">{appt.doctor.name}</h3>
                                      <p className="text-sm text-gray-500">{appt.doctor.speciality}</p>
