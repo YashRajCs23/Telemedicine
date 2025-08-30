@@ -3,15 +3,15 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const connectDB = require('./config/db.js');
-const initializeSocket = require('./config/socket.js');
+const connectDB = require('./config/db.js'); // Assuming you have this file
+const initializeSocket = require('./config/socket.js'); // Assuming you have this file
 
 // Route imports
 const userRoutes = require('./routes/user.route.js');
 const doctorRoutes = require('./routes/doctor.route.js');
 const appointmentRoutes = require('./routes/appointment.route.js');
 const sessionRoutes = require('./routes/session.route.js');
-const chatbotRoutes = require('./routes/chatbot.route.js');
+const chatbotRoutes = require('./routes/chatbot.route.js'); // Assuming you have this file
 
 // Initialize app and server
 dotenv.config();
@@ -24,15 +24,12 @@ connectDB();
 // Initialize Socket.IO with server instance
 const io = initializeSocket(server);
 
-// Share io instance with routes that need it
-app.set('io', io);
-
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Session middleware to access socket.io in routes
+// Make io accessible to our routes
 app.use((req, res, next) => {
     req.io = io;
     next();
@@ -50,15 +47,7 @@ app.get('/', (req, res) => {
     res.send('Telemedicine API is running');
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-});
-
-// Handle socket disconnection
-process.on('SIGTERM', () => {
-    io.close(() => {
-        console.log('Socket.IO server closed');
-        process.exit(0);
-    });
 });

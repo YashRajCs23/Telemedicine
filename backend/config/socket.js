@@ -26,7 +26,6 @@ const initializeSocket = (server) => {
         socket.on('join-room', (roomId, userId) => {
             socket.join(roomId);
             console.log(`User ${userId} (${socket.id}) joined video room ${roomId}`);
-            // Notify others in the room that a new user has connected
             socket.to(roomId).emit('user-connected', userId);
         });
 
@@ -49,7 +48,6 @@ const initializeSocket = (server) => {
 
         socket.on('disconnect', () => {
             console.log('Client disconnected:', socket.id);
-            // You can add logic here to notify users in a room about disconnection if needed
         });
     });
 
@@ -57,4 +55,3 @@ const initializeSocket = (server) => {
 };
 
 module.exports = initializeSocket;
-

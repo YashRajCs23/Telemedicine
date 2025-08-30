@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ChatBot from './ChatBot';
 import { io } from "socket.io-client";
 import { 
     Home, Calendar, Stethoscope, User, Menu, X, LogOut, Plus, 
     Clock, CheckCircle2, AlertCircle, Search, ChevronLeft, Video, 
-    XCircle, MapPin, RefreshCw, Edit3, Phone, Mail, Camera, Heart, 
+    XCircle, MapPin, RefreshCw,Bot, Edit3, Phone, Mail, Camera, Heart, 
     Upload, Save, Star
 } from "lucide-react";
 
@@ -39,6 +40,7 @@ const Sidebar = ({ setActivePage, activePage }) => {
         { name: "Dashboard", icon: <Home />, page: "home" },
         { name: "Appointments", icon: <Calendar />, page: "appointments" },
         { name: "Doctors", icon: <Stethoscope />, page: "doctors" },
+        {name: "ChatBot", icon: <Bot />, page: "chatbot" },
         { name: "Profile", icon: <User />, page: "profile" }
     ];
 
@@ -52,7 +54,7 @@ const Sidebar = ({ setActivePage, activePage }) => {
         } finally {
             localStorage.removeItem('token');
             localStorage.removeItem('userId');
-            navigate('/login'); // Redirect to user login page
+            navigate('/'); // Redirect to user login page
         }
     };
 
@@ -796,9 +798,7 @@ const Profile = () => {
 };
 
 // --- Page Component: ChatBot (Placeholder) ---
-const ChatBot = () => {
-    return <div className="p-6"><h1 className="text-2xl font-bold">ChatBot</h1><p>Chatbot functionality coming soon.</p></div>;
-};
+
 
 // --- Main UserDashboard Component ---
 const UserDashboard = () => {
