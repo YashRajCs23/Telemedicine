@@ -1,6 +1,3 @@
-// src/App.jsx
-
-// Landing Components
 import Navbar from "./components/Landing/Navbar";
 import Herosection from "./components/Landing/Herosection";
 import Background from "./components/Landing/Background";
@@ -16,12 +13,29 @@ function App() {
   return (
     <>
       <Navbar />
-      <Background />
-      <Herosection />
-      <AboutSection />
-      <Services />
-      <SomePoints/>
-      <Last />
+      
+      {/* Home Section - Background and Hero combined */}
+      <section id="home">
+        <Background />
+        <Herosection />
+      </section>
+      
+      {/* About Section */}
+      <section id="AboutSection">
+        <AboutSection />
+      </section>
+      
+      {/* Services Section */}
+      <section id="Services">
+        <Services />
+        <SomePoints />
+      </section>
+      
+      {/* Contact/Connect Section */}
+      <section id="Last">
+        <Last />
+      </section>
+      
       <Footer />
     </>
   );

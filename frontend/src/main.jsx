@@ -3,13 +3,12 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 
-// Landing / Home pages
+// User/Doctor Authentication pages
 import CheckUserDoctor from "./components/Landing/CheckUserDoctor.jsx";
 import UserLogin from "./components/Landing/UserLogin.jsx";
 import UserSignup from "./components/Landing/UserSignup.jsx";
 import DoctorLogin from "./components/Landing/DoctorLogin.jsx";
 import DoctorSignup from "./components/Landing/DoctorSignup.jsx";
-import Services from "./components/Landing/Services.jsx";
 import NotFound from "./components/Landing/NotFound.jsx";
 
 // Dashboards
@@ -22,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* Home */}
+        {/* Home Page with all sections */}
         <Route path="/" element={<App />} />
 
         {/* Role Selection */}
@@ -41,9 +40,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="signup" element={<DoctorSignup />} />
           <Route path="dashboard/*" element={<DoctorDashboard />} />
         </Route>
-
-        {/* Services */}
-        <Route path="/services" element={<Services />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
