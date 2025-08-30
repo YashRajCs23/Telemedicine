@@ -1,28 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import api from '../../utils/api';
 
 const Profile = () => {
-  const [profile, setProfile] = useState({
-    name: "Dr. Ramesh Kumar",
-    email: "dr.ramesh@example.com",
-    phone: "+91 9876543210",
-    specialization: "Cardiologist",
-    experience: "12 years",
-    qualification: "MBBS, MD",
-    address: "123 Medical Street, Healthcare City, Mumbai",
-    bio: "Experienced cardiologist with expertise in non-invasive cardiology and preventive care."
-  });
+  const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
+
+  // Fetch doctor profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const doctorId = localStorage.getItem('doctorId');
+        const response = await api.get(`http://localhost:3000/doctor/profile/${doctorId}`);
+        setProfile(response.data);
+        setLoading(false);
+      } catch (error) {
+        setMessage({
+          type: 'error',
+          text: error.response?.data?.message || 'Failed to fetch profile'
+        });
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setProfile({ ...profile, [name]: value });
+    setProfile(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    setMessage({ type: 'success', text: 'Profile updated successfully!' });
+  const handleSave = async () => {
+    try {
+      const doctorId = localStorage.getItem('doctorId');
+      const response = await api.put(`http://localhost:3000/doctor/profile/${doctorId}`, profile);
+      
+      setProfile(response.data.doctor);
+      setIsEditing(false);
+      setMessage({
+        type: 'success',
+        text: 'Profile updated successfully!'
+      });
+    } catch (error) {
+      setMessage({
+        type: 'error',
+        text: error.response?.data?.message || 'Failed to update profile'
+      });
+    }
   };
+
+  if (loading) return <div className="p-6">Loading...</div>;
+  if (!profile) return <div className="p-6">No profile data found</div>;
 
   return (
     <div className="p-6">
@@ -47,29 +80,21 @@ const Profile = () => {
           <button 
             onClick={() => { setIsEditing(true); setMessage(null); }}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
+          >
             Edit Profile
           </button>
         )}
       </div>
+
       {message && (
-        <div className={`p-4 rounded-lg mb-4 ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+        <div className={`p-4 rounded-lg mb-4 ${
+          message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        }`}>
           {message.text}
         </div>
       )}
 
       <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-100 max-w-4xl">
-        <div className="flex items-center space-x-6 mb-8 pb-6 border-b border-gray-100">
-          <div className="w-24 h-24 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center">
-            <span className="text-white text-2xl font-bold">RK</span>
-          </div>
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">{profile.name}</h2>
-            <p className="text-gray-600">{profile.specialization}</p>
-            <p className="text-gray-500">{profile.experience} of experience</p>
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
@@ -88,106 +113,66 @@ const Profile = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-            {isEditing ? (
-              <input
-                type="email"
-                name="email"
-                value={profile.email}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            ) : (
-              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.email}</p>
-            )}
+            <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.email}</p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
             {isEditing ? (
               <input
                 type="tel"
-                name="phone"
-                value={profile.phone}
+                name="phoneNumber"
+                value={profile.phoneNumber}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             ) : (
-              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.phone}</p>
+              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.phoneNumber}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Specialization</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Speciality</label>
             {isEditing ? (
               <input
                 type="text"
-                name="specialization"
-                value={profile.specialization}
+                name="speciality"
+                value={profile.speciality}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             ) : (
-              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.specialization}</p>
+              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.speciality}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Experience</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
             {isEditing ? (
               <input
-                type="text"
-                name="experience"
-                value={profile.experience}
+                type="number"
+                name="yearsOfExperience"
+                value={profile.yearsOfExperience}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             ) : (
-              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.experience}</p>
+              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.yearsOfExperience} years</p>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Qualification</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Locality</label>
             {isEditing ? (
               <input
                 type="text"
-                name="qualification"
-                value={profile.qualification}
+                name="locality"
+                value={profile.locality}
                 onChange={handleChange}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             ) : (
-              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.qualification}</p>
-            )}
-          </div>
-
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
-            {isEditing ? (
-              <textarea
-                name="address"
-                value={profile.address}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows="2"
-              />
-            ) : (
-              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.address}</p>
-            )}
-          </div>
-
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
-            {isEditing ? (
-              <textarea
-                name="bio"
-                value={profile.bio}
-                onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                rows="3"
-              />
-            ) : (
-              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.bio}</p>
+              <p className="text-gray-800 bg-gray-50 px-3 py-2 rounded-lg">{profile.locality}</p>
             )}
           </div>
         </div>

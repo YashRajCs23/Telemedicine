@@ -38,6 +38,11 @@ export default function UserLogin() {
         return;
       }
 
+      const data = await res.json();
+      localStorage.setItem("userToken", data.token);
+      localStorage.setItem("userId", data.user._id);
+      localStorage.setItem("userInfo", JSON.stringify(data.user));
+
       setLoading(false);
       navigate("/user/dashboard"); // Change route as per your app
     } catch {

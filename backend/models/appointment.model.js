@@ -1,34 +1,62 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
-    date: {
+    appointmentDate: {
         type: Date,
-        required: true
+        required: [true, 'Appointment date is required']
     },
-    startTime: {
+    timeSlot: {
         type: String,
-        required: true // e.g., "14:00"
-    },
-    endTime: {
-        type: String,
-        required: true // e.g., "15:00"
+        required: [true, 'Time slot is required'],
+        enum: {
+            values: [
+                '09:00', '10:00', '11:00', '12:00', 
+                '14:00', '15:00', '16:00', '17:00'
+            ],
+            message: '{VALUE} is not a valid time slot'
+        }
     },
     doctor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Doctor',
-        required: true
+        required: [true, 'Doctor reference is required']
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: [true, 'User reference is required']
     },
-    isActive: {
-        type: Boolean,
-        default: true
+    reason: {
+        type: String,
+        required: [true, 'Reason for appointment is required'],
+        trim: true
+    },
+    status: {
+        type: String,
+        enum: {
+            values: ['pending', 'accepted', 'rejected', 'completed'],
+            message: '{VALUE} is not a valid status'
+        },
+        default: 'pending'
     }
 }, {
     timestamps: true
 });
 
-module.exports = mongoose.model('Appointment', appointmentSchema);
+// Compound index for checking slot availability
+appointmentSchema.index({ doctor: 1, appointmentDate: 1, timeSlot: 1 });
+
+// Method to check if slot is available
+appointmentSchema.statics.isSlotAvailable = async function(doctorId, date, timeSlot) {
+    const existingAppointment = await this.findOne({
+        doctor: doctorId,
+        appointmentDate: date,
+        timeSlot: timeSlot,
+        status: { $in: ['pending', 'accepted'] }
+    });
+    return !existingAppointment;
+};
+
+const Appointment = mongoose.model('Appointment', appointmentSchema);
+
+module.exports = Appointment;

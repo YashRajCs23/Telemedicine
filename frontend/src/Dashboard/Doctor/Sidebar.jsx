@@ -1,26 +1,48 @@
 import React from 'react';
-import { X, Home, Calendar, Users, Clock, DollarSign, Bell, User, Settings, LogOut, ChevronRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; // Assuming you are using React Router
+import { X, LayoutDashboard, Calendar, Users, HeartPulse, Settings, LogOut, Stethoscope } from 'lucide-react';
 
-const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
+const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onClose }) => {
+  const navigate = useNavigate(); // Hook for navigation
+
   const menuItems = [
-    { key: 'dashboard', icon: Home, label: 'Dashboard' },
-    { key: 'appointments', icon: Calendar, label: 'Appointments' },
-    { key: 'patients', icon: Users, label: 'Patients' },
-    { key: 'slots', icon: Clock, label: 'Manage Slots' },
-    { key: 'earnings', icon: DollarSign, label: 'Earnings' },
-    { key: 'notifications', icon: Bell, label: 'Notifications' },
-    { key: 'profile', icon: User, label: 'Profile' },
-    { key: 'settings', icon: Settings, label: 'Settings' },
+    { name: 'Dashboard', icon: LayoutDashboard, tab: 'dashboard' },
+    { name: 'Appointments', icon: Calendar, tab: 'appointments' },
+    { name: 'Patients', icon: Users, tab: 'patients' },
+    { name: 'Profile', icon: HeartPulse, tab: 'profile' },
+    { name: 'Settings', icon: Settings, tab: 'settings' },
   ];
+  
+  const handleLogout = async () => {
+      try {
+          const response = await fetch('http://localhost:3000/doctor/logout', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              }
+          });
+
+          if (response.ok) {
+              localStorage.removeItem('token');
+              localStorage.removeItem('doctorId');
+              navigate('/');
+          } else {
+              console.error('Logout failed on server:', await response.json());
+          }
+      } catch (error) {
+          console.error('Logout request failed:', error);
+      }
+  };
 
   return (
     <>
-      {isOpen && (
+      {isMobileOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={onClose}
         />
       )}
+<<<<<<< HEAD
 
       <aside
         className={`fixed top-0 left-0 z-50 h-full w-64 bg-sky-900 shadow-xl transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:z-0 ${
@@ -33,14 +55,19 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
               <span className="text-white text-sm font-bold">Dr</span>
             </div>
             <h2 className="text-xl font-bold text-gray-800">TeleMed</h2>
+=======
+      <aside className={`fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-gray-900 text-white p-6 shadow-2xl transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex items-center justify-between mb-12">
+          <div className="flex items-center">
+            <Stethoscope size={32} className="text-blue-500 mr-2" />
+            <span className="text-xl font-bold">DOXY</span>
+>>>>>>> a922a95bf75ee2c488cd5f565d0c9a0ca792a6b1
           </div>
-          <button
-            onClick={onClose}
-            className="lg:hidden p-1 text-gray-400 hover:text-gray-600"
-          >
+          <button onClick={onClose} className="lg:hidden p-2 text-gray-400 hover:bg-gray-800 rounded-lg transition-colors">
             <X size={20} />
           </button>
         </div>
+<<<<<<< HEAD
 
         <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 mx-4 mt-4 rounded-xl">
           <div className="flex items-center space-x-3">
@@ -80,13 +107,35 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
                 </li>
               );
             })}
+=======
+        <nav className="flex-1">
+          <ul className="space-y-2">
+            {menuItems.map(item => (
+              <li key={item.tab}>
+                <button
+                  onClick={() => {
+                    setActiveTab(item.tab);
+                    onClose(); 
+                  }}
+                  className={`flex items-center w-full p-3 rounded-lg transition-colors ${
+                    activeTab === item.tab ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 text-gray-300'
+                  }`}
+                >
+                  <item.icon size={20} className="mr-3" />
+                  <span>{item.name}</span>
+                </button>
+              </li>
+            ))}
+>>>>>>> a922a95bf75ee2c488cd5f565d0c9a0ca792a6b1
           </ul>
         </nav>
-
-        <div className="absolute bottom-6 left-4 right-4">
-          <button className="flex items-center space-x-3 w-full px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors">
-            <LogOut size={20} />
-            <span className="font-medium">Logout</span>
+        <div className="mt-auto">
+          <button 
+            onClick={handleLogout}
+            className="flex items-center w-full p-3 rounded-lg text-red-400 hover:bg-gray-800 transition-colors"
+          >
+            <LogOut size={20} className="mr-3" />
+            <span>Sign Out</span>
           </button>
         </div>
       </aside>
@@ -95,3 +144,4 @@ const Sidebar = ({ isOpen, onClose, activeTab, setActiveTab }) => {
 };
 
 export default Sidebar;
+

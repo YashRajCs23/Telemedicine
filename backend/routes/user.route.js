@@ -106,4 +106,12 @@ router.get('/profile/:id', async (req, res) => {
     }
 });
 
+// Logout user
+router.post('/logout', (req, res) => {
+    // With JWT, logout is primarily handled on the client-side by deleting the token.
+    // This server endpoint is here to formally acknowledge the logout action.
+    res.status(200).json({ message: 'Logout successful' });
+});
+
+
 module.exports = router;

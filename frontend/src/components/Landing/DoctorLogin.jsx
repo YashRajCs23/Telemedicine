@@ -34,6 +34,9 @@ export default function DoctorLogin() {
 
       const data = await res.json();
       // You can store token or doctor info here if needed
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("doctorId", data.doctor._id);
+      // localStorage.setItem("doctorId", data.doctor._id); // Store doctor ID
       setLoading(false);
       navigate("/doctor/dashboard"); // Change route as per your app
     } catch (err) {
