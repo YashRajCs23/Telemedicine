@@ -26,6 +26,8 @@ const VideoCall = () => {
     useEffect(() => {
         let isMounted = true;
         let isRemoteUserJoined = false;
+        // Add this line to confirm the value is being read
+console.log('Client App ID:', import.meta.env.VITE_AGORA_APP_ID);
 
         const startAgoraCall = async () => {
             setCallStatus('Fetching token...');
