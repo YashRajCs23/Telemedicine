@@ -66,7 +66,7 @@ const Sidebar = ({ setActivePage, activePage }) => {
             {isOpen && <div className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={toggleSidebar} />}
             <aside className={`fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-lg border-r border-gray-200 transform transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'} flex flex-col`}>
                 <div className="p-6 border-b border-gray-200">
-                    <h2 className="text-2xl font-bold text-blue-600">TeleHealth</h2>
+                    <h2 className="text-2xl font-bold text-blue-600">DOXY</h2>
                     <p className="text-sm text-gray-500 mt-1">Your Health, Our Priority</p>
                 </div>
                 <nav className="flex-1 p-4 space-y-2">

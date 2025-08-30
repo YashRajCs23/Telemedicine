@@ -11,12 +11,6 @@ export default function CheckUserDoctor() {
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-sky-200/20 rounded-full blur-3xl"></div>
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-100/20 rounded-full blur-2xl"></div>
       
-<<<<<<< HEAD
-      <div className="w-1/2 max-w-md rounded-2xl bg-white shadow-xl p-8 text-center h-[20vw]">
-        <h1 className="text-2xl font-semibold text-gray-800 mb-6">
-          Choose Your Role
-        </h1>
-=======
       <div className="flex min-h-screen relative z-10">
         {/* Left Section - Branding & Information */}
         <div className="w-1/2 flex flex-col justify-center px-12 lg:px-16 bg-black backdrop-blur-sm">
@@ -33,7 +27,6 @@ export default function CheckUserDoctor() {
               </div>
               <div className="w-16 h-1 bg-gradient-to-r from-blue-600 to-sky-500 rounded-full"></div>
             </div>
->>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
 
             {/* Main Heading */}
             <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
