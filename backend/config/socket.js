@@ -12,16 +12,22 @@ const initializeSocket = (server) => {
         console.log('New client connected:', socket.id);
 
         // --- Listener for Doctor-specific notifications ---
-        // When the doctor's navbar connects, it joins a private room.
+        // When the doctor's dashboard connects, it joins a private room.
         socket.on('join-doctor-room', (doctorId) => {
             socket.join(`doctor_${doctorId}`);
             console.log(`Socket ${socket.id} joined room for doctor ${doctorId}`);
         });
+        
+        // --- Listener for User-specific notifications ---
+        // When a user's dashboard connects, it joins this private room.
+        socket.on('join-user-room', (userId) => {
+            socket.join(`user_${userId}`);
+            console.log(`Socket ${socket.id} joined room for user ${userId}`);
+        });
 
-        // --- Existing WebRTC signaling ---
+        // --- WebRTC signaling for the video call room ---
         socket.on('join-room', (roomId, userId) => {
             socket.join(roomId);
-            socket.join(`user_${userId}`); // For user-specific notifications
             socket.to(roomId).emit('user-connected', userId);
 
             // Handle WebRTC signaling
@@ -37,13 +43,13 @@ const initializeSocket = (server) => {
                 socket.to(roomId).emit('ice-candidate', candidate, userId);
             });
 
-            // Handle disconnection
+            // Handle disconnection from the video room
             socket.on('disconnect', () => {
                 console.log(`User ${userId} disconnected from room ${roomId}`);
                 socket.to(roomId).emit('user-disconnected', userId);
             });
 
-            // Handle end call
+            // Handle end call event
             socket.on('end-call', () => {
                 console.log(`Call ended in room ${roomId}`);
                 io.to(roomId).emit('call-ended');
@@ -55,3 +61,4 @@ const initializeSocket = (server) => {
 };
 
 module.exports = initializeSocket;
+

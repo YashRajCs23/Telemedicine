@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { 
     Calendar, Users, Clock, Bell, LayoutDashboard, Settings, LogOut, 
     HeartPulse, Stethoscope, BriefcaseMedical, Menu, X, Plus, Edit2, 
-    Trash2, User, Video, Search, AlertCircle, CheckCircle, Save, Phone, 
+    Trash2, User, Video, UserX, AlertCircle, CheckCircle, Save, Phone, 
     Mail, MapPin
 } from 'lucide-react';
 
@@ -30,7 +30,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onClose }) => {
         } finally {
             localStorage.removeItem('token');
             localStorage.removeItem('doctorId');
-            navigate('/'); // Navigate to a login or home page
+            navigate('/doctor/login'); 
         }
     };
 
@@ -39,7 +39,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onClose }) => {
             {isMobileOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={onClose} />}
             <aside className={`fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-gray-900 text-white p-6 shadow-2xl transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center justify-between mb-12">
-                    <div className="flex items-center"><Stethoscope size={32} className="text-blue-500 mr-2" /><span className="text-xl font-bold">DOXY</span></div>
+                    <div className="flex items-center"><Stethoscope size={32} className="text-blue-500 mr-2" /><span className="text-xl font-bold">HealthCare</span></div>
                     <button onClick={onClose} className="lg:hidden p-2 text-gray-400 hover:bg-gray-800 rounded-lg"><X size={20} /></button>
                 </div>
                 <nav className="flex-1">
@@ -90,8 +90,6 @@ const DoctorNavbar = ({ onMenuClick }) => {
             if (profileResponse.ok) {
                 const profileData = await profileResponse.json();
                 setDoctorName(profileData.name || 'Doctor');
-            } else {
-               setDoctorName('Doctor');
             }
         } catch (error) {
             console.error("Error fetching navbar data:", error);
@@ -186,7 +184,6 @@ const DashboardHome = ({ setActiveTab }) => {
             });
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
-            // Global socket listener will handle navigation
         } catch (error) {
             alert("Error: Could not start the video session.");
         }
@@ -403,9 +400,6 @@ const Patients = () => {
         return "Today";
     };
 
-    if (loading) return <div className="p-6 text-center">Loading patients...</div>;
-    if (error) return <div className="p-6 text-center text-red-500">{error}</div>;
-
     return (
         <div className="p-6 bg-gray-50 min-h-full">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
@@ -415,20 +409,19 @@ const Patients = () => {
                     <input type="text" placeholder="Search patients..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full sm:w-64 pl-10 pr-4 py-2 border rounded-lg"/>
                 </div>
             </div>
-            {filteredPatients.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredPatients.map((patient) => (
-                        <div key={patient._id} className="bg-white p-6 rounded-xl shadow-sm border">
-                            <div className="flex items-center justify-between mb-4">
-                                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"><span className="text-blue-600 font-bold text-lg">{getInitials(patient.name)}</span></div>
-                            </div>
-                            <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">{patient.name}</h3>
-                            <div className="space-y-2 text-sm text-gray-600 mb-4"><p>Last Visit: {timeSince(patient.lastVisit)}</p></div>
-                            <div className="border-t pt-4 mt-auto"><p className="text-sm text-gray-600">Contact: {patient.phoneNumber}</p></div>
+            {loading ? <div className="text-center p-8">Loading...</div> : error ? <div className="text-red-500 text-center p-8">{error}</div> :
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredPatients.map((patient) => (
+                    <div key={patient._id} className="bg-white p-6 rounded-xl shadow-sm border">
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center"><span className="text-blue-600 font-bold text-lg">{getInitials(patient.name)}</span></div>
                         </div>
-                    ))}
-                </div>
-            ) : <div className="text-center py-12 bg-white rounded-lg border border-dashed"><User size={48} className="mx-auto text-gray-400 mb-4" /><h3 className="text-xl font-semibold">No Patients Found</h3></div>}
+                        <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">{patient.name}</h3>
+                        <div className="space-y-2 text-sm text-gray-600 mb-4"><p>Last Visit: {timeSince(patient.lastVisit)}</p></div>
+                        <div className="border-t pt-4 mt-auto"><p className="text-sm text-gray-600">Contact: {patient.phoneNumber}</p></div>
+                    </div>
+                ))}
+            </div>}
         </div>
     );
 };
