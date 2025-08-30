@@ -189,7 +189,7 @@ const DoctorCardSkeleton = () => (
 );
 
 
-export default function Doctors() {
+const Doctors = () => {
     const [doctors, setDoctors] = useState([]);
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [specialties, setSpecialties] = useState(["All"]);
@@ -197,7 +197,7 @@ export default function Doctors() {
     const [searchTerm, setSearchTerm] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
 
     useEffect(() => {
@@ -245,18 +245,16 @@ export default function Doctors() {
     
     const handleBookAppointment = (doctor) => {
         setSelectedDoctor(doctor);
-        setIsModalOpen(true);
+        setIsBookingModalOpen(true);
     };
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
-            {isModalOpen && <AppointmentModal doctor={selectedDoctor} onClose={() => setIsModalOpen(false)} />}
-            
+            {isBookingModalOpen && <BookingModal onClose={() => setIsBookingModalOpen(false)} onAppointmentBooked={() => setIsBookingModalOpen(false)} />}
             <div className="mb-6">
                 <h1 className="text-3xl font-bold text-gray-900">Find Doctors</h1>
                 <p className="text-gray-600 mt-1">Book appointments with qualified healthcare professionals</p>
             </div>
-
             <div className="mb-6 space-y-4">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
@@ -270,15 +268,7 @@ export default function Doctors() {
                 </div>
                 <div className="flex space-x-2 overflow-x-auto pb-2">
                     {specialties.map((specialty) => (
-                        <button
-                            key={specialty}
-                            onClick={() => setActiveSpecialty(specialty)}
-                            className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors ${
-                                activeSpecialty === specialty 
-                                ? "bg-blue-600 text-white" 
-                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                            }`}
-                        >
+                        <button key={specialty} onClick={() => setActiveSpecialty(specialty)} className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors ${activeSpecialty === specialty ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}>
                             {specialty}
                         </button>
                     ))}
@@ -286,9 +276,7 @@ export default function Doctors() {
             </div>
 
             {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {[...Array(3)].map((_, i) => <DoctorCardSkeleton key={i} />)}
-                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">{[...Array(3)].map((_, i) => <div key={i} className="bg-white p-6 rounded-xl shadow-sm border animate-pulse h-64"></div>)}</div>
             ) : error ? (
                  <div className="text-center py-12 text-red-600 bg-red-50 rounded-lg">
                     <AlertCircle className="mx-auto h-12 w-12 mb-4" />
@@ -298,34 +286,18 @@ export default function Doctors() {
             ) : filteredDoctors.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredDoctors.map((doctor) => (
-                        <div 
-                            key={doctor._id} 
-                            className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-lg transition-all flex flex-col"
-                        >
+                        <div key={doctor._id} className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-lg transition-all flex flex-col">
                             <div className="flex-grow">
                                 <div className="flex items-start space-x-4 mb-4">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
-                                        <span className="text-white font-semibold text-lg">{getInitials(doctor.name)}</span>
-                                    </div>
+                                    <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center"><span className="text-white font-semibold text-lg">{getInitials(doctor.name)}</span></div>
                                     <div className="flex-1">
                                         <h3 className="text-lg font-semibold text-gray-900">{doctor.name}</h3>
                                         <p className="text-blue-600 font-medium">{doctor.speciality}</p>
-                                        <div className="flex items-center space-x-1 mt-1">
-                                            <Star size={14} className="text-yellow-400 fill-current" />
-                                            <span className="text-sm font-medium text-gray-700">{doctor.rating || 'N/A'}</span>
-                                            <span className="text-sm text-gray-500">({doctor.reviews || 0} reviews)</span>
-                                        </div>
                                     </div>
                                 </div>
                                 <div className="space-y-3">
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span className="text-gray-500">Experience</span>
-                                        <span className="font-medium text-gray-900">{doctor.yearsOfExperience || 0} years</span>
-                                    </div>
-                                    <div className="flex items-start space-x-2 text-sm">
-                                        <MapPin size={14} className="text-gray-400 mt-0.5" />
-                                        <span className="text-gray-600">{doctor.locality || 'Location not specified'}</span>
-                                    </div>
+                                    <div className="flex items-center justify-between text-sm"><span className="text-gray-500">Experience</span><span className="font-medium text-gray-900">{doctor.yearsOfExperience || 0} years</span></div>
+                                    <div className="flex items-start space-x-2 text-sm"><MapPin size={14} className="text-gray-400 mt-0.5" /><span className="text-gray-600">{doctor.locality || 'Location not specified'}</span></div>
                                 </div>
                             </div>
                             <div className="mt-4 pt-4 border-t">
@@ -338,9 +310,7 @@ export default function Doctors() {
                 </div>
             ) : (
                 <div className="text-center py-12">
-                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Search size={32} className="text-gray-400" />
-                    </div>
+                    <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"><Search size={32} className="text-gray-400" /></div>
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No doctors found</h3>
                     <p className="text-gray-500">Try adjusting your search criteria or check back later.</p>
                 </div>
@@ -348,4 +318,6 @@ export default function Doctors() {
         </div>
     );
 }
+
+export default Doctors;
 

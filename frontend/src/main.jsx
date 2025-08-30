@@ -18,6 +18,8 @@ import DoctorDashboard from "./Dashboard/Doctor/DoctorDashboard.jsx";
 import Services from "./components/Landing/Services.jsx";
 import NotFound from "./components/Landing/NotFound.jsx"; // optional 404 page
 
+import VideoCall from "./components/VideoCall.jsx";
+
 import "./index.css";
 import { User } from "lucide-react";
 import UserDashboard from "./Dashboard/User/UserDashboard.jsx";
@@ -49,6 +51,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
         {/* Services */}
         <Route path="/services" element={<Services />} />
+
+        {/* Video Call*/}
+        <Route path="/video/:roomId" element={<VideoCall />} />
 
         {/* 404 Not Found */}
         <Route path="*" element={<NotFound />} />

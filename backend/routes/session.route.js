@@ -18,16 +18,25 @@ router.post('/create', async (req, res) => {
             });
         }
 
-        // Check if session already exists
+        // Check if session already exists for this appointment
         const existingSession = await Session.findOne({ appointmentId });
         if (existingSession) {
+            // If session exists, just notify participants to join
+            req.io.to(`user_${appointment.user}`).emit('session-created', {
+                roomId: existingSession.roomId,
+                appointmentId
+            });
+            req.io.to(`doctor_${appointment.doctor}`).emit('session-created', {
+                roomId: existingSession.roomId,
+                appointmentId
+            });
             return res.status(200).json({ 
                 success: true, 
                 session: existingSession 
             });
         }
 
-        // Create new session
+        // Create new session if one doesn't exist
         const session = new Session({
             appointmentId,
             doctor: appointment.doctor,
@@ -38,7 +47,7 @@ router.post('/create', async (req, res) => {
 
         await session.save();
 
-        // Notify participants through Socket.IO
+        // Notify participants through Socket.IO that a new session is ready
         req.io.to(`user_${appointment.user}`).emit('session-created', {
             roomId: session.roomId,
             appointmentId
@@ -78,10 +87,11 @@ router.post('/join/:roomId', async (req, res) => {
         if (session.status === 'completed') {
             return res.status(400).json({
                 success: false,
-                message: 'Session has ended'
+                message: 'This session has already ended'
             });
         }
 
+        // Set status to ongoing when the first person joins
         if (session.status === 'waiting') {
             session.status = 'ongoing';
             await session.save();
@@ -112,18 +122,26 @@ router.post('/end/:roomId', async (req, res) => {
             });
         }
 
-        session.status = 'completed';
-        session.endTime = new Date();
-        session.duration = Math.round(
-            (session.endTime - session.startTime) / 1000 / 60
-        );
-        await session.save();
+        // Check if the session is already completed to avoid redundant updates
+        if (session.status !== 'completed') {
+            session.status = 'completed';
+            session.endTime = new Date();
+            session.duration = Math.round(
+                (session.endTime - session.startTime) / (1000 * 60)
+            );
+            await session.save();
 
-        // Notify participants
-        req.io.to(roomId).emit('session-ended', {
-            roomId,
-            duration: session.duration
-        });
+            // Find the related appointment and update its status to 'completed'
+            await Appointment.findByIdAndUpdate(session.appointmentId, {
+                status: 'completed'
+            });
+
+            // Notify participants that the call has officially ended
+            req.io.to(roomId).emit('call-ended', {
+                roomId,
+                duration: session.duration
+            });
+        }
 
         res.json({ 
             success: true, 
@@ -138,3 +156,4 @@ router.post('/end/:roomId', async (req, res) => {
 });
 
 module.exports = router;
+
