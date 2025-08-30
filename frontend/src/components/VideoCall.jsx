@@ -23,9 +23,11 @@ const VideoCall = () => {
     const durationIntervalRef = useRef();
 
     useEffect(() => {
+        // --- 1. Initialize Peer Connection ---
         const servers = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
         pcRef.current = new RTCPeerConnection(servers);
 
+        // --- 2. Get User Media ---
         navigator.mediaDevices.getUserMedia({ video: true, audio: true })
             .then(stream => {
                 setLocalStream(stream);
@@ -43,6 +45,7 @@ const VideoCall = () => {
                 setCallStatus("Error: Could not access camera or microphone.");
             });
 
+        // --- 3. Set up Peer Connection Event Handlers ---
         pcRef.current.ontrack = (event) => {
             setRemoteStream(event.streams[0]);
             if (remoteVideoRef.current) {
@@ -56,6 +59,7 @@ const VideoCall = () => {
             }
         };
 
+        // --- 4. Socket Signaling Setup ---
         const userId = localStorage.getItem('userId') || localStorage.getItem('doctorId') || 'user_' + Math.random();
         socket.emit('join-room', roomId, userId);
 
@@ -102,9 +106,14 @@ const VideoCall = () => {
         socket.on('ice-candidate', handleIceCandidate);
         socket.on('call-ended', handleCallEnded);
 
+        // --- 5. Cleanup ---
         return () => {
-            if (pcRef.current) pcRef.current.close();
-            if (localStream) localStream.getTracks().forEach(track => track.stop());
+            if(pcRef.current) {
+                pcRef.current.close();
+            }
+            if (localStream) {
+                localStream.getTracks().forEach(track => track.stop());
+            }
             socket.off('user-connected', handleUserConnected);
             socket.off('offer', handleOffer);
             socket.off('answer', handleAnswer);
@@ -174,9 +183,15 @@ const VideoCall = () => {
                 </div>
             </div>
             <div className="bg-gray-800 p-4 flex justify-center items-center gap-4">
-                <button onClick={toggleMute} className={`p-3 rounded-full transition-colors ${isMuted ? 'bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}><MicOff size={24} /></button>
-                <button onClick={toggleCamera} className={`p-3 rounded-full transition-colors ${isCameraOff ? 'bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}><VideoOff size={24} /></button>
-                <button onClick={() => endCall(true)} className="p-3 rounded-full bg-red-600 hover:bg-red-700"><PhoneOff size={24} /></button>
+                <button onClick={toggleMute} className={`p-3 rounded-full transition-colors ${isMuted ? 'bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}>
+                    {isMuted ? <MicOff size={24} /> : <Mic size={24} />}
+                </button>
+                <button onClick={toggleCamera} className={`p-3 rounded-full transition-colors ${isCameraOff ? 'bg-red-500' : 'bg-gray-600 hover:bg-gray-500'}`}>
+                     {isCameraOff ? <VideoOff size={24} /> : <Video size={24} />}
+                </button>
+                <button onClick={() => endCall(true)} className="p-3 rounded-full bg-red-600 hover:bg-red-700">
+                    <PhoneOff size={24} />
+                </button>
             </div>
         </div>
     );
