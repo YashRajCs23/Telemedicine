@@ -7,6 +7,7 @@ import {
     Trash2, User, Video, UserX,Search, AlertCircle, CheckCircle, Save, Phone, 
     Mail, MapPin
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Initialize socket connection once
 const socket = io("http://localhost:3000");
@@ -114,12 +115,12 @@ const DoctorNavbar = ({ onMenuClick }) => {
                 </div>
                 <div className="flex items-center space-x-4">
                     <div className="relative">
-                        <button className="p-2 text-gray-600 rounded-lg relative">
+                        {/* <button className="p-2 text-gray-600 rounded-lg relative">
                             <Bell size={20} />
                             {notificationCount > 0 && <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">{notificationCount}</span>}
-                        </button>
+                        </button> */}
                     </div>
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center"><span className="text-white text-sm font-medium">{getInitials(doctorName)}</span></div>
+                    {/* <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center"><span className="text-white text-sm font-medium">{getInitials(doctorName)}</span></div> */}
                 </div>
             </div>
         </header>

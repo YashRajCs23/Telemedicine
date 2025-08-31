@@ -10,6 +10,7 @@ import UserLogin from "./components/Landing/UserLogin.jsx";
 import UserSignup from "./components/Landing/UserSignup.jsx";
 import DoctorLogin from "./components/Landing/DoctorLogin.jsx";
 import DoctorSignup from "./components/Landing/DoctorSignup.jsx";
+import DoctorPage from "./components/Landing/DoctorPage.jsx";
 
 // Dashboards
 import DoctorDashboard from "./Dashboard/Doctor/DoctorDashboard.jsx";
@@ -23,7 +24,7 @@ import UserDashboard from "./Dashboard/User/UserDashboard.jsx";
 
 import VideoCall from "./components/VideoCall.jsx";
 
-import "./index.css";
+
 
 // import AboutSection
 import AboutSection from "./components/Landing/About/AboutSection.jsx";
@@ -62,6 +63,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
         {/* Video Call*/}
         <Route path="/video/:roomId" element={<VideoCall />} />
+
+        <Route path="/doctors" element={<DoctorPage />} />
 
         {/* 404 Not Found */}
         {/* 404 */}

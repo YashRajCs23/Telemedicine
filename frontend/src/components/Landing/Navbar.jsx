@@ -1,6 +1,7 @@
 import React from "react";
 import BookButton from "./BookButton";
 import logodoxy from "./Image/logo-removebg-preview.png";
+import { Link } from "react-router";
 
 const Navbar = () => {
   return (
@@ -9,9 +10,9 @@ const Navbar = () => {
 
       {/* Logo - Left */}
       <div className="logo flex-[1] font-extrabold text-[2vw] text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-400">
-        <a href="#home">
+        <Link to="/">
           <img src={logodoxy} alt="Logo" className="w-auto h-[4vw]" />
-        </a>
+        </Link>
       </div>
 
       {/* Navigation Links - Center */}

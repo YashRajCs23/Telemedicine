@@ -43,6 +43,8 @@ export default function DoctorLogin() {
         setErrors({ submit: data.message || "Login failed. Try again." });
         return;
       }
+      localStorage.setItem("doctorToken", data.token);
+      localStorage.setItem("doctorId", data.doctor._id);
 
       console.log("✅ Login success:", data);
       // Redirect to doctor dashboard or home
