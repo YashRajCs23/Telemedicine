@@ -39,7 +39,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileOpen, onClose }) => {
             {isMobileOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden" onClick={onClose} />}
             <aside className={`fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-gray-900 text-white p-6 shadow-2xl transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="flex items-center justify-between mb-12">
-                    <div className="flex items-center"><Stethoscope size={32} className="text-blue-500 mr-2" /><span className="text-xl font-bold">DOXY</span></div>
+                    <div className="flex items-center"><Stethoscope size={32} className="text-blue-500 mr-2" /><span className="text-xl font-bold"><Link to='/'>DOXY</Link></span></div>
                     <button onClick={onClose} className="lg:hidden p-2 text-gray-400 hover:bg-gray-800 rounded-lg"><X size={20} /></button>
                 </div>
                 <nav className="flex-1">
