@@ -10,12 +10,6 @@ import UserLogin from "./components/Landing/UserLogin.jsx";
 import UserSignup from "./components/Landing/UserSignup.jsx";
 import DoctorLogin from "./components/Landing/DoctorLogin.jsx";
 import DoctorSignup from "./components/Landing/DoctorSignup.jsx";
-<<<<<<< HEAD
-import NotFound from "./components/Landing/NotFound.jsx";
-import Services from "./components/Landing/Services.jsx";
-=======
-
->>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
 
 // Dashboards
 import DoctorDashboard from "./Dashboard/Doctor/DoctorDashboard.jsx";

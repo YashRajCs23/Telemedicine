@@ -2,12 +2,7 @@ import Navbar from "./components/Landing/Navbar";
 import Herosection from "./components/Landing/Herosection";
 import Background from "./components/Landing/Background";
 import Footer from "./components/Landing/Footer";
-<<<<<<< HEAD
-import AboutSection from "./components/Landing/About/AboutSection.jsx";
-
-=======
 import AboutSection from './components/Landing/About/AboutSection.jsx'
->>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
 import Services from "./components/Landing/Services.jsx";
 import Last from "./components/Landing/Last.jsx";
 

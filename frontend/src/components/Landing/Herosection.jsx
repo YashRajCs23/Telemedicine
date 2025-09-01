@@ -36,15 +36,6 @@ const Herosection = () => {
       </div>
 
       {/* Right Section (Image) */}
-<<<<<<< HEAD
-      <div className="image w-full lg:w-[55%] flex justify-center overflow-hidden z--1 items-center mt-8 lg:mt-0">
-        <img
-          src={imagehome}
-          alt="Telehealth Illustration"
-          className="w-full h-auto max-w-md lg:max-w-lg rounded-2xl shadow-2xl hover:scale-105 transition duration-500"
-        />
-      </div>
-=======
        
 <div className="image w-[60vw] lg:w-[55%] flex justify-center items-center mt-8 lg:mt-0">
         <img
@@ -53,7 +44,6 @@ const Herosection = () => {
           className="w-full h-auto max-w-xs lg:max-w-sm rounded-2xl shadow-2xl hover:scale-105 transition duration-500"
         />
       </div>
->>>>>>> 57e95d347cab54a53f963bd6664ddca27442f6f7
     </div>
   );
 };
