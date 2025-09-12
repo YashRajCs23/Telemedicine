@@ -15,25 +15,25 @@ import DoctorSignup from "./components/Landing/DoctorSignup.jsx";
 import DoctorDashboard from "./Dashboard/Doctor/DoctorDashboard.jsx";
 import NotFound from "./components/Landing/NotFound.jsx";
 
-// Services page
-
-
+// User Dashboard
 import UserDashboard from "./Dashboard/User/UserDashboard.jsx";
 
+// Video Call
 import VideoCall from "./components/VideoCall.jsx";
 
+// Services page (⚡ YOU FORGOT THIS IMPORT)
+import Services from "./components/Landing/Services.jsx";
+
 import "./index.css";
 
-// import AboutSection
+// AboutSection
 import AboutSection from "./components/Landing/About/AboutSection.jsx";
-
-import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* Home Page with all sections */}
+        {/* Home Page */}
         <Route path="/" element={<App />} />
 
         {/* About Page */}
@@ -59,11 +59,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         {/* Services */}
         <Route path="/services" element={<Services />} />
 
-        {/* Video Call*/}
+        {/* Video Call */}
         <Route path="/video/:roomId" element={<VideoCall />} />
 
         {/* 404 Not Found */}
-        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

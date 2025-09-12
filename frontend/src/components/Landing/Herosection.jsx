@@ -8,9 +8,9 @@ const Herosection = () => {
     <div className="flex flex-col lg:flex-row justify-center items-center px-6 md:px-12 pt-16 pb-8 w-full min-h-[88vh] gap-8 lg:gap-16">
 
       {/* Left Section */}
-      <div className="left w-[40vw] lg:w-[40%] flex flex-col justify-center gap-4 md:gap-6 text-black">
+      <div className="left w-[40vw] lg:w-[40%] flex flex-col justify-center gap-4 md:gap-6 text-black ">
         <div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">Enabling exceptional</h1>
+          <h1 className="text-7xl sm:text-4xl md:text-5xl font-bold">Enabling exceptional</h1>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
             <span className="text-sky-300">telehealth</span> at every
           </h1>
